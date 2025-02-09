@@ -1,9 +1,6 @@
-import Sidebar from "@/app/components/Sidebar/Sidebar";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import BudgetPage from "@/app/components/BudgetPage/BudgetPage";
 
 export default function Home() {
-  return (
-      <div className='flex border-2 border-amber-600 h-full w-full'>
-          <Sidebar />
-      </div>
-  );
+  return (<BudgetPage />);
 }
