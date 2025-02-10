@@ -4,7 +4,7 @@ import BudgetContainer from "@/app/components/BudgetPage/BudgetContainer/BudgetC
 export default function BudgetPage() {
     return (
         <div className='flex border-2 border-amber-600 h-full w-full'>
-            <Sidebar className='flex-shrink-0' />
+            <Sidebar className='p-1 bg-sidebarBackground' />
             <BudgetContainer className='flex w-full h-full border-2 border-amber-950' />
         </div>
     );
