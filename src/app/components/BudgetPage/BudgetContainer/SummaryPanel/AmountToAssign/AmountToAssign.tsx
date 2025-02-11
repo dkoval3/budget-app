@@ -11,7 +11,7 @@ export default function AmountToAssign({ amount }: AmountToAssignProps) {
         textColor } = getStyles(amount);
 
     return (
-        <div className={`${backgroundColor} ${textColor} flex items-center justify-between w-64 h-16 px-3 rounded-xl`}>
+        <div className={`${backgroundColor} ${textColor} flex items-center justify-between w-64 h-16 px-3 mr-32 rounded-xl`}>
             <div className='flex flex-col font-bold'>
                 <div className='text-lg'>{formatAsDollarAmount(amount)}</div>
                 <div className={`text-xs`}>{message}</div>

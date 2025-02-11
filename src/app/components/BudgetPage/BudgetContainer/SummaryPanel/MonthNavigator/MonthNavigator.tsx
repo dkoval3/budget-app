@@ -2,7 +2,7 @@ export default function MonthNavigator({ month, year}: MonthNavigatorProps) {
     const onHoverStyle = 'text-blue1 hover:text-blue1Hover';
 
     return (
-      <div className='flex items-center h-16 border-2 border-fuchsia-500'>
+      <div className='flex items-center min-h-12'>
           <button>
               <i className={`${onHoverStyle} bi bi-arrow-left-circle mx-3 text-3xl`}></i>
           </button>
