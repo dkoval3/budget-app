@@ -1,7 +1,7 @@
 import BudgetOperationsBar
     from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetOperationsBar/BudgetOperationsBar";
 import BudgetTable from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetTable";
-import { sampleBudget } from "@/model/BudgetTypes";
+import {sampleBudget} from "@/model/BudgetTypes";
 
 export default function BudgetPanel() {
   return (
