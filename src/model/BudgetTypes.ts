@@ -3,6 +3,7 @@ export type Budget = BudgetCategory[];
 export interface BudgetCategory {
     categoryName: string,
     lineItems: BudgetLineItem[],
+    isSelected: boolean,
 }
 
 export class BudgetLineItem {
@@ -19,13 +20,8 @@ export class BudgetLineItem {
     }
 }
 
-function budgetLineItemToObject(lineItem: BudgetLineItem) {
-    return {
-        lineItem: lineItem.lineItem,
-        assigned: lineItem.assigned,
-        activity: lineItem.activity,
-        isCategoryHeader: lineItem.isCategoryHeader ?? false,
-    };
+export function newBudgetLineItem(): BudgetLineItem {
+    return { lineItem: '', assigned: 0, activity: 0, isSelected: false, isCategoryHeader: false };
 }
 
 export function budgetToLineItemList(budget: Budget): BudgetLineItem[] {
@@ -36,8 +32,8 @@ export function budgetToLineItemList(budget: Budget): BudgetLineItem[] {
     })
 }
 
-function generateCategoryLineItem(budgetCategory: BudgetCategory): BudgetLineItem {
-    const categoryLineItem = { lineItem: budgetCategory.categoryName, assigned: 0, activity: 0, isSelected: false, isCategoryHeader: true };
+export function generateCategoryLineItem(budgetCategory: BudgetCategory): BudgetLineItem {
+    const categoryLineItem = { lineItem: budgetCategory.categoryName, assigned: 0, activity: 0, isSelected: budgetCategory.isSelected, isCategoryHeader: true };
     return budgetCategory.lineItems.reduce((previousVal, currentValue) => {
         previousVal.activity += currentValue.activity;
         previousVal.assigned += currentValue.assigned;
@@ -48,6 +44,7 @@ function generateCategoryLineItem(budgetCategory: BudgetCategory): BudgetLineIte
 export const sampleBudget: Budget = [
     {
         categoryName: 'Needs',
+        isSelected: false,
         lineItems: [
             {lineItem: 'Rent', assigned: 1800, activity: 1601, isSelected: false },
             {lineItem: 'Apartment', assigned: 400, activity: 150, isSelected: false},
@@ -56,6 +53,7 @@ export const sampleBudget: Budget = [
     },
     {
         categoryName: 'Wants',
+        isSelected: false,
         lineItems: [
             {lineItem: 'Restaurants', assigned: 300, activity: 143.23 , isSelected: false},
             {lineItem: 'Fun', assigned: 350, activity: 134, isSelected: false},
