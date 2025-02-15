@@ -1,13 +1,20 @@
 import BudgetOperationsBar
     from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetOperationsBar/BudgetOperationsBar";
 import BudgetTable from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetTable";
-import {sampleBudget} from "@/model/BudgetTypes";
+import {BudgetProvider} from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/UseBudget";
+import SelectedCellsSummary from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/SelectedCellsSummary";
 
 export default function BudgetPanel() {
   return (
-      <div className='w-full h-full border-2 border-pink-500'>
-          <BudgetOperationsBar />
-          <BudgetTable budget={sampleBudget} />
-      </div>
+      <BudgetProvider>
+          <div className='flex w-full h-full'>
+              <div className='flex flex-col w-full h-full'>
+                  <BudgetOperationsBar />
+                  <BudgetTable />
+              </div>
+              <SelectedCellsSummary className='flex flex-col w-72 h-full' />
+          </div>
+      </BudgetProvider>
+
   );
 }
