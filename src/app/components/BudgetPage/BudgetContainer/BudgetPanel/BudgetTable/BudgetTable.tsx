@@ -11,8 +11,6 @@ export default function BudgetTable({ className }: BudgetTableProps) {
         budgetObject,
         headerIsSelected,
         switchAllBoxes,
-        switchBox,
-        switchCategoryBoxes,
         switchBoxes,
     } = UseBudget();
 

@@ -1,0 +1,1 @@
+export const targetMessage = `When you create a target, we’ll let you know how much money to set aside to stay on track over time.`;

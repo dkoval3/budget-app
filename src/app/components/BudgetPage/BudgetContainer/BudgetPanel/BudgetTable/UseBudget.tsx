@@ -2,8 +2,9 @@
 
 import React, {RefObject, useContext, useRef, useState} from "react";
 import {useImmer} from "use-immer";
-import {Budget, BudgetLineItem, sampleBudget} from "@/model/BudgetTypes";
+import {Budget, BudgetLineItem} from "@/model/BudgetTypes";
 import {WritableDraft} from "immer";
+import {sampleBudget} from "@/model/SampleBudget";
 
 export const BudgetContext = React.createContext({} as UseBudgetReturnType);
 
@@ -64,8 +65,15 @@ function useBudget() {
             .filter(budgetCategory => budgetCategory.isSelected)
             .flatMap(budgetCategory => {
                 return budgetCategory.lineItems
-                    .filter(lineItem => lineItem.isSelected)
+                    .filter(lineItem => lineItem.isSelected);
             });
+    }
+
+    const isOnlyOneBoxChecked = () => {
+        return budgetObject
+            .flatMap(budgetCategory => budgetCategory.lineItems.map(lineItem => lineItem.isSelected))
+            .filter(isSelected => isSelected)
+            .length === 1;
     }
 
     return {
@@ -75,7 +83,8 @@ function useBudget() {
         switchCategoryBoxes,
         switchBoxes,
         updateAssignedValue,
-        subBudgetFromSelected,
+        subBudget: subBudgetFromSelected(),
+        isOnlyOneBoxChecked: isOnlyOneBoxChecked(),
         headerIsSelected,
         inputRef,
     };
@@ -103,5 +112,6 @@ interface UseBudgetReturnType {
     switchBoxes: (i: number, j: number, isCategoryHeader: boolean) => void,
     updateAssignedValue: (i: number, j: number, assigned: number) => void,
     inputRef: RefObject<HTMLInputElement | null>,
-    subBudgetFromSelected: () => BudgetLineItem[],
+    subBudget: BudgetLineItem[],
+    isOnlyOneBoxChecked: boolean,
 }

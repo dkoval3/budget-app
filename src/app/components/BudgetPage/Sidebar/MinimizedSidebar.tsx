@@ -5,7 +5,7 @@ const buttonClass = 'flex hover:bg-blue-900 w-15 h-15 text-3xl p-2 rounded-xl ju
 export default function MinimizedSidebar({ className, setIsMinimized }: MinimizedSidebarProps){
 
     return(
-        <div className={`${className} relative flex flex-col border-2 h-full items-center pb-3`}>
+        <div className={`${className} relative flex flex-col h-full items-center pb-3`}>
             <IconButton buttonIcon={userAccountIcon} />
             <IconButton buttonIcon={budgetIcon} />
             <IconButton buttonIcon={reflectIcon} />

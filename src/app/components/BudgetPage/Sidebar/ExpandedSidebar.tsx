@@ -6,7 +6,7 @@ import { accountsIcon, budgetIcon, reflectIcon } from "@/app/IconConstants";
 
 export default function ExpandedSidebar({ setIsMinimized, className }: ExpandedSidebarProps) {
     return(
-        <div className={`${className} relative flex-col border-2 h-full w-80`}>
+        <div className={`${className} relative flex-col h-full w-80`}>
             <div>
                 <ProfileTab/>
                 <ModeButton iconClass={budgetIcon} message='Budget'/>
