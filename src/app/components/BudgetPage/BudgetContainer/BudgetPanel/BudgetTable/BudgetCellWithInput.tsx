@@ -12,9 +12,9 @@ export default function BudgetCellWithInput (
     const { inputRef, updateAssignedValue, isOnlyOneBoxChecked } = UseBudget();
 
     return (
-        <td className={`${className}`}>
+        <td className={`${className} w-28`}>
             {isSelected && isOnlyOneBoxChecked ?
-                <input className='bg-background max-w-28 text-right rounded border-2 border-blue-700'
+                <input className='bg-background w-full text-right rounded border-2 border-blue-700'
                        type='text'
                        defaultValue={message}
                        onBlur={(e) => updateAssignedValue(index.i, index.j, parseFloat(e.target.value))}

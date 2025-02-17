@@ -1,5 +1,5 @@
 import {Budget} from "@/model/BudgetTypes";
-import {TargetTimeframe, TargetType, Weekday} from "@/model/Target";
+import {FILL_UP, HAVE_BALANCE, MONTHLY, SET_ASIDE, SUNDAY, TargetType, WEEKLY} from "@/model/Target";
 
 export const sampleBudget: Budget = [
     {
@@ -13,8 +13,8 @@ export const sampleBudget: Budget = [
                 isSelected: false,
                 target: {
                     amount: 1800,
-                    type: TargetType.SET_ASIDE,
-                    timeframe: TargetTimeframe.MONTHLY,
+                    type: SET_ASIDE,
+                    timeframe: MONTHLY,
                     due: 1,
                 }
             },
@@ -24,8 +24,8 @@ export const sampleBudget: Budget = [
                 isSelected: false,
                 target: {
                     amount: 300,
-                    type: TargetType.SET_ASIDE,
-                    timeframe: TargetTimeframe.MONTHLY,
+                    type: SET_ASIDE,
+                    timeframe: MONTHLY,
                     due: 1,
                 }
             },
@@ -48,9 +48,9 @@ export const sampleBudget: Budget = [
                 isSelected: false,
                 target: {
                     amount: 100,
-                    timeframe: TargetTimeframe.WEEKLY,
-                    type: TargetType.HAVE_BALANCE,
-                    due: Weekday.SUNDAY,
+                    timeframe: WEEKLY,
+                    type: HAVE_BALANCE,
+                    due: SUNDAY,
                 }
             },
             {
@@ -60,7 +60,7 @@ export const sampleBudget: Budget = [
                 isSelected: false,
                 target: {
                     amount: 350,
-                    type: TargetType.HAVE_BALANCE,
+                    type: HAVE_BALANCE,
                 }
             },
             {
@@ -70,7 +70,7 @@ export const sampleBudget: Budget = [
                 isSelected: false,
                 target: {
                     amount: 400,
-                    type: TargetType.FILL_UP,
+                    type: FILL_UP,
                 }
             }
         ]

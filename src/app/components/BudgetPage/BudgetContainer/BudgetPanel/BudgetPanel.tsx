@@ -12,7 +12,7 @@ export default function BudgetPanel() {
                   <BudgetOperationsBar />
                   <BudgetTable />
               </div>
-              <SelectedCellsSummary className='flex flex-col w-72 h-full' />
+              <SelectedCellsSummary className='flex flex-col w-80 h-full' />
           </div>
       </BudgetProvider>
 
