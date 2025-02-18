@@ -4,15 +4,15 @@ export const YEARLY = 'YEARLY';
 export const TargetTimeframes = [WEEKLY, MONTHLY, YEARLY];
 export type TargetTimeframe = 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 
-export const SUNDAY = 'SUNDAY';
-export const MONDAY = 'MONDAY';
-export const TUESDAY = 'TUESDAY';
-export const WEDNESDAY = 'WEDNESDAY';
-export const THURSDAY = 'THURSDAY';
-export const FRIDAY = 'FRIDAY';
-export const SATURDAY = 'SATURDAY';
+export const SUNDAY = 'Sunday';
+export const MONDAY = 'Monthday';
+export const TUESDAY = 'Tuesday';
+export const WEDNESDAY = 'Wednesday';
+export const THURSDAY = 'Thursday';
+export const FRIDAY = 'Friday';
+export const SATURDAY = 'Saturday';
 
-export type Weekday = 'SUNDAY' | 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY';
+export type Weekday = 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
 export const Weekdays = [SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY];
 
 export const FILL_UP = 'FILL_UP';

@@ -2,9 +2,9 @@
 
 import {useState} from "react";
 import UseBudget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/UseBudget";
-import {Target, timeframeMessageMap} from "@/model/Target";
+import {Target, timeframeMessageMap, Weekdays} from "@/model/Target";
 import NoTarget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/Target/NoTarget";
-import {formatAsDollarAmount, numToDay} from "@/common/Formatter";
+import {formatAsDollarAmount, nextMonthMessage, numToDay, toRegularCase} from "@/common/Formatter";
 
 export default function TargetPanel({ className }: TargetPanelProps) {
     const [expandAvailableBalance, setExpandAvailableBalance] = useState(false);
@@ -19,7 +19,10 @@ export default function TargetPanel({ className }: TargetPanelProps) {
                         {expandAvailableBalance ? <i className="bi bi-chevron-down"></i> : <i className="bi bi-chevron-right"></i>}
                     </div>
                 </button>
-                { expandAvailableBalance ? <TargetDropdown categoryName={subBudget[0].lineItem} target={subBudget[0].target} assigned={subBudget[0].assigned} /> : null }
+                { expandAvailableBalance
+                    ? <TargetDropdown categoryName={subBudget[0].lineItem} target={subBudget[0].target} assigned={subBudget[0].assigned} />
+                    : null
+                }
                 <div>
                 </div>
             </div>
@@ -35,7 +38,7 @@ const TargetDropdown = ({ categoryName, target, assigned }: TargetDropdownProps)
 };
 
 const ExpandedTarget = ({ target, assigned }: ExpandedTargetProps) => {
-    let targetMessage = `${target.type} another ${formatAsDollarAmount(target.amount)} `;
+    let targetMessage = `${nextMonthMessage(target.type)} ${formatAsDollarAmount(target.amount)} `;
     let dueDateMessage = 'Eventually'
 
     if ('timeframe' in target) {

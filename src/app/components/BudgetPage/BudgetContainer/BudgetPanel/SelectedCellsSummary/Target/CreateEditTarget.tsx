@@ -1,10 +1,22 @@
 'use client'
 
 import {
-    FILL_UP, MONTHLY, SET_ASIDE, SUNDAY, TargetTimeframe, TargetType, Weekday, Weekdays, WEEKLY, YEARLY
+    FILL_UP,
+    MONTHLY,
+    SET_ASIDE,
+    SUNDAY,
+    TargetTimeframe,
+    TargetType,
+    Weekday,
+    Weekdays,
+    WEEKLY,
+    YEARLY
 } from "@/model/Target";
 import {useState} from "react";
 import {numToDay, toRegularCase} from "@/common/Formatter";
+import {CreateEditTargetProps} from "@/model/CreateEditTargetProps";
+import {CreateCustomTarget, CreateRecurringTarget} from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/Target/CreateEditTargetServer";
+import Button1 from "@/app/components/Button/Button1";
 
 const weeklyLabels: [string, string, string] = ['I need', 'Every', 'Next week, I want to'];
 const weeklyOptions: [string[], string[]] = [Weekdays.map(day => toRegularCase(day)), [FILL_UP, SET_ASIDE]];
@@ -21,83 +33,36 @@ export default function CreateEditTarget({ context }: CreateEditTargetProps) {
     const [by, setBy] = useState<Weekday | number | Date>(SUNDAY);
     const [type, setType] = useState<TargetType>(SET_ASIDE);
 
-  return <div className='border-t-[0.5px] border-gray-700'>
-      <div className='flex justify-between p-1 mt-1 bg-gray-600 rounded-lg'>
-          {/*<Button1 text='Weekly' onClick={() => setRecurrence(WEEKLY)} />*/}
-          {/*<Button1 text='Monthly' onClick={() => setRecurrence(MONTHLY)} />*/}
-          {/*<Button1 text='Yearly' onClick={() => setRecurrence(YEARLY)} />*/}
-          {/*<Button1 text='Custom' onClick={() => setRecurrence(undefined)} />*/}
-          <button className='text-sm rounded hover:bg-sidebarBackground transition-colors' onClick={() => setRecurrence(WEEKLY)}>Weekly</button>
-          <button className='text-sm rounded hover:bg-sidebarBackground transition-colors' onClick={() => setRecurrence(MONTHLY)}>Monthly</button>
-          <button className='text-sm rounded hover:bg-sidebarBackground transition-colors' onClick={() => setRecurrence(YEARLY)}>Yearly</button>
-          <button className='text-sm rounded hover:bg-sidebarBackground transition-colors' onClick={() => setRecurrence(undefined)}>Custom</button>
-      </div>
-      {
-          recurrence === WEEKLY ? <CreateRecurringTarget labels={weeklyLabels} options={weeklyOptions} /> :
-              recurrence === MONTHLY ? <CreateRecurringTarget labels={monthlyLabels} options={monthlyOptions} /> :
-                  recurrence === YEARLY ? <CreateRecurringTarget labels={yearlyLabels} options={yearlyOptions} useDateSelector={true} /> : null
-      }
-  </div>;
-}
+    const setters = {setRecurrence, setAmount, setBy, setType};
+    const values = {recurrence, amount, by, type};
 
-const CreateRecurringTarget = ({ labels, options, useDateSelector = false }: CreateTargetProps) => {
-    const OptionsInput = () => {
-        return(
-            <div className='flex flex-col p-2'>
-                <label>{labels[1]}</label>
-                <select className='bg-sidebarBackground border-[0.5px] rounded'>
-                    { options[0].map((day, i) => <option key={i}>{day}</option>) }
-                </select>
-            </div>
-        );
+
+    const className = 'text-sm rounded hover:bg-sidebarBackground transition-colors';
+
+    const onClick = (timeframe: TargetTimeframe | undefined) => {
+        setRecurrence(timeframe);
+        setAmount(0);
+        setBy(SUNDAY);
+        setType(SET_ASIDE);
     }
 
-    const DateInput = () => {
-        return(
-            <div className='flex flex-col px-2 py-1'>
-                <label>{labels[1]}</label>
-                <input className='bg-sidebarBackground border-[0.5px] rounded' type='date' />
-            </div>
-        );
-    }
-
-    return(
-        <div>
-            <div className='flex flex-col px-2 py-1'>
-                <label>{labels[0]}</label>
-                <input className='bg-sidebarBackground border-[0.5px] rounded' type='text' />
-            </div>
-            <div>
-                { useDateSelector ? <DateInput /> : <OptionsInput /> }
-                <div className='flex flex-col px-2 py-1'>
-                    <label>{labels[2]}</label>
-                    <select className='bg-sidebarBackground border-[0.5px] rounded'>
-                        { options[1]
-                            .map((type, i) =>
-                                <option key={i}>{nextMonthMessage(type)} $0.00</option>
-                            )
-                        }
-                    </select>
-                </div>
-            </div>
+    return <div className='flex flex-col border-t-[0.5px] border-gray-700'>
+        <div className='flex justify-between p-1 mt-1 bg-gray-600 rounded-lg'>
+            <button className={className} onClick={() => onClick(WEEKLY)}>Weekly</button>
+            <button className={className} onClick={() => onClick(MONTHLY)}>Monthly</button>
+            <button className={className} onClick={() => onClick(YEARLY)}>Yearly</button>
+            <button className={className} onClick={() => onClick(undefined)}>Custom</button>
         </div>
-    );
-}
-
-const nextMonthMessage = (type: string) => {
-    if (type === FILL_UP) return 'Refill up to ';
-    if (type === SET_ASIDE) return 'Set aside another ';
-    else throw new Error('Invalid target type');
-}
-
-interface CreateEditTargetProps {
-    className?: string
-    context: 'create' | 'edit',
-}
-
-interface CreateTargetProps {
-    className?: string,
-    labels: [string, string, string],
-    options: [string[], string[]]
-    useDateSelector?: boolean,
+        {
+            recurrence === WEEKLY ?
+                <CreateRecurringTarget labels={weeklyLabels} options={weeklyOptions} setters={setters} values={values}/> :
+                recurrence === MONTHLY ?
+                    <CreateRecurringTarget labels={monthlyLabels} options={monthlyOptions} setters={setters} values={values}/> :
+                    recurrence === YEARLY ?
+                        <CreateRecurringTarget labels={yearlyLabels} options={yearlyOptions} useDateSelector={true}
+                                               setters={setters} values={values}/> :
+                        <CreateCustomTarget setters={setters} values={values}/>
+        }
+        <Button1 className='m-2' text='Save Target' />
+    </div>;
 }

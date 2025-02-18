@@ -31,10 +31,6 @@ export default function AvailableBalance({ className }: AvailableBalanceProps) {
 
     return (
         <div className={`${className} flex flex-col w-full px-2 pt-2 items-center`}>
-            <div className='flex justify-between items-center w-full px-2 my-2 mx-5'>
-                <div className='text-xl'>{subBudget.length === 1 ? subBudget[0].lineItem : `${subBudget.length} Categories Selected`}</div>
-                <i className="bi bi-pencil"></i>
-            </div>
             <div className='flex flex-col m-1 w-full bg-sidebarBackground rounded-lg'>
                 <button className='flex text-sm justify-between p-2' onClick={() => setExpandAvailableBalance(!expandAvailableBalance)} >
                     <div className='flex items-center'>

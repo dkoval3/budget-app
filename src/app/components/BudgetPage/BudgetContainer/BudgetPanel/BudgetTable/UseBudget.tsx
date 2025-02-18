@@ -76,6 +76,10 @@ function useBudget() {
             .length === 1;
     }
 
+    const isAnythingSelected = () => {
+        return budgetObject.some(budgetCategory => budgetCategory.isSelected);
+    };
+
     return {
         budgetObject,
         switchBox,
@@ -85,6 +89,7 @@ function useBudget() {
         updateAssignedValue,
         subBudget: subBudgetFromSelected(),
         isOnlyOneBoxChecked: isOnlyOneBoxChecked(),
+        isAnythingSelected: isAnythingSelected(),
         headerIsSelected,
         inputRef,
     };
@@ -114,4 +119,5 @@ interface UseBudgetReturnType {
     inputRef: RefObject<HTMLInputElement | null>,
     subBudget: BudgetLineItem[],
     isOnlyOneBoxChecked: boolean,
+    isAnythingSelected: boolean,
 }
