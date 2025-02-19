@@ -8,20 +8,16 @@ export interface BudgetCategory {
     isSelected: boolean,
 }
 
-export class BudgetLineItem {
-    lineItem: string;
-    assigned: number;
-    activity: number;
-    isSelected: boolean = false;
-    isCategoryHeader?: boolean = false;
-    target?: Target;
+export type BudgetLineItem = {
+    lineItem: string,
+    assigned: number,
+    activity: number,
+    isSelected: boolean,
+    isCategoryHeader?: boolean,
+    target?: Target,
+};
 
-    constructor(lineItem: string = '', assigned: number = 0, activity: number = 0) {
-        this.lineItem = lineItem;
-        this.assigned = assigned;
-        this.activity = activity;
-    }
-}
+export type SubBudgetLineItem = BudgetLineItem & { index: { i: number, j: number } };
 
 export function newBudgetLineItem(): BudgetLineItem {
     return { lineItem: '', assigned: 0, activity: 0, isSelected: false, isCategoryHeader: false };

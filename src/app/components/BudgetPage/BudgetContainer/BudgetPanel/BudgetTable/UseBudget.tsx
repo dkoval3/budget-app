@@ -2,7 +2,7 @@
 
 import React, {RefObject, useContext, useRef, useState} from "react";
 import {useImmer} from "use-immer";
-import {Budget, BudgetLineItem} from "@/model/BudgetTypes";
+import {Budget, BudgetLineItem, SubBudgetLineItem} from "@/model/BudgetTypes";
 import {WritableDraft} from "immer";
 import {sampleBudget} from "@/model/SampleBudget";
 
@@ -60,13 +60,25 @@ function useBudget() {
         })
     };
 
-    const subBudgetFromSelected = () => {
-        return budgetObject
-            .filter(budgetCategory => budgetCategory.isSelected)
-            .flatMap(budgetCategory => {
-                return budgetCategory.lineItems
-                    .filter(lineItem => lineItem.isSelected);
+    const updateLineItemName = (i: number, j: number, name: string ) => {
+        updateBudgetObject(draft => {
+            draft[i].lineItems[j].lineItem = name;
+        });
+    }
+
+    const deleteLineItem = (i: number, j: number) => {
+        updateBudgetObject(draft => {
+           draft[i].lineItems.splice(j, 1);
+        });
+    }
+
+    function subBudgetFromSelected(): SubBudgetLineItem[] {
+        const subBudget: SubBudgetLineItem[] = budgetObject.flatMap((budgetCategory, i) => {
+            return budgetCategory.lineItems.flatMap((lineItem, j) => {
+                return {...lineItem, index: { i, j }};
             });
+        });
+        return subBudget.filter(item => item.isSelected);
     }
 
     const isOnlyOneBoxChecked = () => {
@@ -87,6 +99,8 @@ function useBudget() {
         switchCategoryBoxes,
         switchBoxes,
         updateAssignedValue,
+        updateLineItemName,
+        deleteLineItem,
         subBudget: subBudgetFromSelected(),
         isOnlyOneBoxChecked: isOnlyOneBoxChecked(),
         isAnythingSelected: isAnythingSelected(),
@@ -116,8 +130,10 @@ interface UseBudgetReturnType {
     switchCategoryBoxes: (i: number) => void,
     switchBoxes: (i: number, j: number, isCategoryHeader: boolean) => void,
     updateAssignedValue: (i: number, j: number, assigned: number) => void,
+    updateLineItemName: (i: number, j: number, name: string) => void,
+    deleteLineItem: (i: number, j: number) => void,
     inputRef: RefObject<HTMLInputElement | null>,
-    subBudget: BudgetLineItem[],
+    subBudget: SubBudgetLineItem[],
     isOnlyOneBoxChecked: boolean,
     isAnythingSelected: boolean,
 }

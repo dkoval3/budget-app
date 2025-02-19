@@ -5,6 +5,7 @@ import UseBudget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/B
 import {Target, timeframeMessageMap, Weekdays} from "@/model/Target";
 import NoTarget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/Target/NoTarget";
 import {formatAsDollarAmount, nextMonthMessage, numToDay, toRegularCase} from "@/common/Formatter";
+import Button1 from "@/app/components/Button/Button1";
 
 export default function TargetPanel({ className }: TargetPanelProps) {
     const [expandAvailableBalance, setExpandAvailableBalance] = useState(false);
@@ -61,6 +62,7 @@ const ExpandedTarget = ({ target, assigned }: ExpandedTargetProps) => {
                     : `You need to assign ${formatAsDollarAmount(target.amount - assigned)} more to meet your target`
                 }
             </div>
+            <Button1 className='m-2' text='Edit Target'></Button1>
         </div>
     );
 }
