@@ -1,23 +1,16 @@
 import {
-    AmountInputProps, CreateCustomTargetProps,
+    AmountInputProps,
+    CreateCustomTargetProps,
     CreateRecurringTargetProps,
     DateInputProps,
     OptionsInputProps
 } from "@/model/CreateEditTargetProps";
-import {
-    FILL_UP,
-    SET_ASIDE,
-    TargetTimeframe,
-    TargetType,
-    TargetTypes,
-    Weekday,
-    Weekdays,
-} from "@/model/Target";
+import {FILL_UP, SET_ASIDE, TargetType, TargetTypes, Weekday, Weekdays,} from "@/model/Target";
 import {formatAsDollarAmount, nextMonthMessage, numToDay, toRegularCase} from "@/common/Formatter";
 import {ChangeEvent} from "react";
 import {monthDayToDate, weekdayToDate} from "@/common/DateUtil";
 
-const recurringTargetTypes: TargetType[] = [FILL_UP, SET_ASIDE];
+const recurringTargetTypes: TargetType[] = [SET_ASIDE, FILL_UP];
 
 const weeklyLabels: [string, string, string] = ['I need', 'Every', 'Next week, I want to'];
 const weeklyDisplayOptions: string[] = Weekdays.map(day => toRegularCase(day));
@@ -84,7 +77,7 @@ export const CreateWeeklyTarget = ({ setters, values }: CreateRecurringTargetPro
                 optionsToDisplay={weeklyDisplayOptions}
             />
             <OptionsInput
-                onChange={(idx) => setters.setType(recurringTargetTypes[idx] as TargetTimeframe)}
+                onChange={(idx) => setters.setType(recurringTargetTypes[idx] as TargetType)}
                 label={weeklyLabels[2]}
                 optionsToDisplay={recurringTargetTypes.map((type) => `${nextMonthMessage(type)} ${formatAsDollarAmount(values.amount)}`)}
             />
@@ -106,7 +99,7 @@ export const CreateMonthlyTarget = ({ setters, values }: CreateRecurringTargetPr
                 optionsToDisplay={monthlyDisplayOptions}
             />
             <OptionsInput
-                onChange={(idx) => setters.setTimeframe(recurringTargetTypes[idx] as TargetTimeframe)}
+                onChange={(idx) => setters.setType(recurringTargetTypes[idx] as TargetType)}
                 label={monthlyLabels[2]}
                 optionsToDisplay={recurringTargetTypes.map((type) => `${nextMonthMessage(type)} ${formatAsDollarAmount(values.amount)}`)}
             />
@@ -127,7 +120,7 @@ export const CreateYearlyTarget = ({ setters, values }: CreateRecurringTargetPro
                 label={yearlyLabels[1]}
             />
             <OptionsInput
-                onChange={(idx) => setters.setTimeframe(recurringTargetTypes[idx] as TargetTimeframe)}
+                onChange={(idx) => setters.setType(recurringTargetTypes[idx] as TargetType)}
                 label={yearlyLabels[2]}
                 optionsToDisplay={recurringTargetTypes.map((type) => `${nextMonthMessage(type)} ${formatAsDollarAmount(values.amount)}`)}
             />

@@ -1,5 +1,7 @@
 import {formatAsDollarAmount} from "@/common/Formatter";
 import {BudgetCellProps} from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetTableProps";
+import {useState} from "react";
+import AddCategoryPopup from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/AddCategoryPopup";
 
 export default function BudgetCell(
     {
@@ -8,11 +10,16 @@ export default function BudgetCell(
         message,
         includeCheckbox = false,
         isSelected = false,
-        onClick = () => {}
+        onClick = () => {},
+        includeAddIcon = false,
     }: BudgetCellProps) {
+    const [isHovering, setIsHovering] = useState(false);
+    const [popupIsClosed, setPopupIsClosed] = useState(true);
+    const onMouseEnter = includeAddIcon ? () => setIsHovering(true) : () => {};
+    const onMouseLeave = includeAddIcon ? () => setIsHovering(false) : () => {};
 
     return (
-        <td className={`${className}`}>
+        <td {...{ onMouseEnter, onMouseLeave }} className={`${className}`}>
             { includeCheckbox
                 ? <input
                     checked={isSelected}
@@ -23,6 +30,21 @@ export default function BudgetCell(
                 : null
             }
             {typeof message === 'number' ? formatAsDollarAmount(message) : message}
+            { includeAddIcon && isHovering
+                ? popupIsClosed
+                    ? <button onClick={() => setPopupIsClosed(false)}>
+                        <i className="bi bi-plus-circle-fill text-sm ml-2"></i>
+                    </button> : null
+                : null
+            }
+            {
+                !popupIsClosed
+                    ? <AddCategoryPopup
+                        className='translate-y-1'
+                        setClose={setPopupIsClosed}
+                        categoryGroupIdx={index.i} />
+                    : null
+            }
         </td>
     );
 }

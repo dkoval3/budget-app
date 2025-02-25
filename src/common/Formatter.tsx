@@ -28,3 +28,5 @@ export const nextMonthMessage = (type: TargetType) => {
     if (type === SET_ASIDE) return 'Set aside another ';
     if (type === HAVE_BALANCE) return 'Have a balance of ';
 }
+
+export const notEmptyOrNull = (str: string) => str !== null && str !== undefined && str !== '';

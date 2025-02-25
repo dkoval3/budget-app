@@ -22,7 +22,7 @@ export const FILL_UP = 'FILL_UP';
 export const SET_ASIDE = 'SET_ASIDE';
 export const HAVE_BALANCE = 'HAVE_BALANCE';
 export type TargetType = 'FILL_UP' | 'SET_ASIDE' | 'HAVE_BALANCE'
-export const TargetTypes = [FILL_UP, SET_ASIDE, HAVE_BALANCE];
+export const TargetTypes = [SET_ASIDE, FILL_UP, HAVE_BALANCE];
 
 export interface CustomTarget {
     amount: number,

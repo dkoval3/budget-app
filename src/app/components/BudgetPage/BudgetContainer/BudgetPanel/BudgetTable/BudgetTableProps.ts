@@ -22,6 +22,7 @@ export interface BudgetCategoryRowProps {
 export interface BudgetCellProps {
     className?: string,
     index: { i: number, j: number},
+    includeAddIcon?: boolean,
     // ref: RefObject<HTMLInputElement>,
     message: string | number,
     includeCheckbox?: boolean,

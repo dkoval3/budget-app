@@ -1,7 +1,8 @@
 export default function Button1(props: ButtonProps) {
     const height = props.height ? props.height : 'h-8';
     const color = props.color ? props.color : 'bg-gray-600';
-    const style = `flex justify-evenly items-center rounded-xl ${height} ${color} hover:bg-gray-500 transition-colors`;
+    const hoverColor = props.hoverColor ? props.hoverColor : 'bg-gray-500';
+    const style = `flex justify-evenly items-center rounded-xl ${height} ${color} hover:${hoverColor} transition-colors`;
 
     return (
         <button onClick={props.onClick} className={`${props.className} ${style}`}>
@@ -16,6 +17,7 @@ interface ButtonProps {
     iconClass?: string,
     height?: number,
     color?: string,
+    hoverColor?: string,
     onClick?: () => void,
     className?: string,
 }

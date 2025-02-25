@@ -23,6 +23,14 @@ export function newBudgetLineItem(): BudgetLineItem {
     return { lineItem: '', assigned: 0, activity: 0, isSelected: false, isCategoryHeader: false };
 }
 
+export function newBudgetCategoryGroup(): BudgetCategory {
+    return {
+        categoryName: '',
+        lineItems: [],
+        isSelected: false,
+    };
+}
+
 export function budgetToLineItemList(budget: Budget): BudgetLineItem[] {
     return budget.flatMap(budgetCategory => {
         const categoryLineItem = generateCategoryLineItem(budgetCategory);

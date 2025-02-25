@@ -2,7 +2,7 @@
 
 import React, {RefObject, useContext, useRef, useState} from "react";
 import {useImmer} from "use-immer";
-import {Budget, SubBudgetLineItem} from "@/model/BudgetTypes";
+import {Budget, newBudgetCategoryGroup, SubBudgetLineItem} from "@/model/BudgetTypes";
 import {WritableDraft} from "immer";
 import {sampleBudget} from "@/model/SampleBudget";
 import {Target} from "@/model/Target";
@@ -73,6 +73,26 @@ function useBudget() {
         });
     }
 
+    const addLineItem = (i: number, name: string) => {
+        updateBudgetObject(draft => {
+            draft[i].lineItems.unshift({
+                lineItem: name,
+                assigned: 0,
+                activity: 0,
+                isSelected: false,
+                isCategoryHeader: false
+            });
+        });
+    }
+
+    const addCategoryGroup = (name: string) => {
+        updateBudgetObject(draft => {
+            const newGroup = newBudgetCategoryGroup();
+            newGroup.categoryName = name;
+            draft.push(newGroup);
+        });
+    };
+
     const deleteLineItem = (i: number, j: number) => {
         updateBudgetObject(draft => {
            draft[i].lineItems.splice(j, 1);
@@ -104,12 +124,15 @@ function useBudget() {
 
     return {
         budgetObject,
+        numberOfCategoryGroups: budgetObject.length,
         switchBox,
         switchAllBoxes,
         switchCategoryBoxes,
         switchBoxes,
         updateAssignedValue,
         updateLineItemName,
+        addLineItem,
+        addCategoryGroup,
         deleteLineItem,
         addTarget,
         target,
@@ -136,6 +159,7 @@ export default function UseBudget() {
 
 interface UseBudgetReturnType {
     budgetObject: Budget,
+    numberOfCategoryGroups: number
     headerIsSelected: boolean,
     switchBox: (i: number, j: number) => void,
     switchAllBoxes: () => void,
@@ -143,6 +167,8 @@ interface UseBudgetReturnType {
     switchBoxes: (i: number, j: number, isCategoryHeader: boolean) => void,
     updateAssignedValue: (i: number, j: number, assigned: number) => void,
     updateLineItemName: (i: number, j: number, name: string) => void,
+    addLineItem: (i: number, name: string) => void,
+    addCategoryGroup: (name: string) => void,
     deleteLineItem: (i: number, j: number) => void,
     addTarget: (i: number, j: number, target: Target) => void,
     inputRef: RefObject<HTMLInputElement | null>,
