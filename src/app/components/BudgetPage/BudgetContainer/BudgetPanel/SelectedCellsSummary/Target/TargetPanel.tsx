@@ -2,14 +2,17 @@
 
 import {useState} from "react";
 import UseBudget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/UseBudget";
-import {Target, timeframeMessageMap, Weekdays} from "@/model/Target";
+import {isRecurringTarget, MONTHLY, Target, timeframeMessageMap, WEEKLY, YEARLY} from "@/model/Target";
 import NoTarget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/Target/NoTarget";
-import {formatAsDollarAmount, nextMonthMessage, numToDay, toRegularCase} from "@/common/Formatter";
+import {formatAsDollarAmount, nextMonthMessage, numToDay} from "@/common/Formatter";
 import Button1 from "@/app/components/Button/Button1";
+import CreateEditTarget
+    from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/Target/CreateEditTarget";
+import {dayIdxToWeekday} from "@/common/DateUtil";
 
 export default function TargetPanel({ className }: TargetPanelProps) {
     const [expandAvailableBalance, setExpandAvailableBalance] = useState(false);
-    const { subBudget } = UseBudget();
+    const [isEditing, setIsEditing] = useState(false);
 
     return (
         <div className={`${className} flex flex-col w-full h-full p-2 items-center`}>
@@ -21,7 +24,10 @@ export default function TargetPanel({ className }: TargetPanelProps) {
                     </div>
                 </button>
                 { expandAvailableBalance
-                    ? <TargetDropdown categoryName={subBudget[0].lineItem} target={subBudget[0].target} assigned={subBudget[0].assigned} />
+                    ? <TargetDropdown
+                        isEditing={isEditing}
+                        setIsEditing={setIsEditing}
+                    />
                     : null
                 }
                 <div>
@@ -31,23 +37,29 @@ export default function TargetPanel({ className }: TargetPanelProps) {
     );
 }
 
-const TargetDropdown = ({ categoryName, target, assigned }: TargetDropdownProps) => {
-    if (target === undefined) {
-        return <NoTarget categoryName={categoryName}/>
+const TargetDropdown = ({ isEditing, setIsEditing }: TargetDropdownProps) => {
+    const { target} = UseBudget();
+    if (target === undefined && !isEditing) {
+        return <NoTarget setIsEditing={setIsEditing} />;
+    } else if (isEditing) {
+        return <CreateEditTarget setIsEditing={setIsEditing} />;
+    } else {
+        return <ExpandedTarget setIsEditing={setIsEditing} />;
     }
-    return (<ExpandedTarget {...{ target, assigned }} />);
 };
 
-const ExpandedTarget = ({ target, assigned }: ExpandedTargetProps) => {
-    let targetMessage = `${nextMonthMessage(target.type)} ${formatAsDollarAmount(target.amount)} `;
-    let dueDateMessage = 'Eventually'
+const ExpandedTarget = ({ setIsEditing }: ExpandedTargetProps) => {
+    const { subBudget, target } = UseBudget();
+    if (target === undefined) return;
+    const assigned = subBudget[0].assigned;
 
-    if ('timeframe' in target) {
+    let targetMessage = `${nextMonthMessage(target.type)} ${formatAsDollarAmount(target.amount)} `;
+    const dueDateMessage = getDueDateMessage(target);
+
+    const onClick = () => setIsEditing(true);
+
+    if (isRecurringTarget(target)) {
         targetMessage += `each ${timeframeMessageMap[target.timeframe][0]}`;
-        dueDateMessage = `${timeframeMessageMap[target.timeframe][1]} ${ typeof(target.due) === 'number'
-            ? numToDay(target.due)
-            : target.due
-        }`;
     }
 
     return(
@@ -62,9 +74,29 @@ const ExpandedTarget = ({ target, assigned }: ExpandedTargetProps) => {
                     : `You need to assign ${formatAsDollarAmount(target.amount - assigned)} more to meet your target`
                 }
             </div>
-            <Button1 className='m-2' text='Edit Target'></Button1>
+            <Button1 onClick={onClick} className='m-2' text='Edit Target'></Button1>
         </div>
     );
+}
+
+const getDueDateMessage = (target: Target) => {
+    let dueDateMessage = '';
+    if (isRecurringTarget(target)) {
+        if (target.timeframe === WEEKLY || target.timeframe === YEARLY) {
+            dueDateMessage = `Each ${dayIdxToWeekday(target.due.getDay())}`;
+        } else if (target.timeframe === MONTHLY) {
+            dueDateMessage = `By the ${numToDay(target.due.getDate())}`;
+        } else if (target.timeframe === YEARLY) {
+            dueDateMessage = `By ${target.due}`;
+        }
+    } else {
+        if (!!target.due) {
+            dueDateMessage = `By ${target.due}`;
+        } else {
+            dueDateMessage = 'Eventually';
+        }
+    }
+    return dueDateMessage;
 }
 
 interface TargetPanelProps {
@@ -72,12 +104,10 @@ interface TargetPanelProps {
 }
 
 interface TargetDropdownProps {
-    categoryName: string,
-    target?: Target,
-    assigned: number,
+    isEditing: boolean,
+    setIsEditing: (isEditing: boolean) => void,
 }
 
 interface ExpandedTargetProps {
-    target: Target,
-    assigned: number
+    setIsEditing: (isEditing: boolean) => void,
 }

@@ -2,9 +2,10 @@
 
 import React, {RefObject, useContext, useRef, useState} from "react";
 import {useImmer} from "use-immer";
-import {Budget, BudgetLineItem, SubBudgetLineItem} from "@/model/BudgetTypes";
+import {Budget, SubBudgetLineItem} from "@/model/BudgetTypes";
 import {WritableDraft} from "immer";
 import {sampleBudget} from "@/model/SampleBudget";
+import {Target} from "@/model/Target";
 
 export const BudgetContext = React.createContext({} as UseBudgetReturnType);
 
@@ -66,6 +67,12 @@ function useBudget() {
         });
     }
 
+    const addTarget = (i: number, j: number, target: Target) => {
+        updateBudgetObject(draft => {
+            draft[i].lineItems[j].target = target;
+        });
+    }
+
     const deleteLineItem = (i: number, j: number) => {
         updateBudgetObject(draft => {
            draft[i].lineItems.splice(j, 1);
@@ -92,6 +99,9 @@ function useBudget() {
         return budgetObject.some(budgetCategory => budgetCategory.isSelected);
     };
 
+    const subBudget = subBudgetFromSelected();
+    const target = subBudget.length === 1 ? subBudget[0]?.target : undefined;
+
     return {
         budgetObject,
         switchBox,
@@ -101,7 +111,9 @@ function useBudget() {
         updateAssignedValue,
         updateLineItemName,
         deleteLineItem,
-        subBudget: subBudgetFromSelected(),
+        addTarget,
+        target,
+        subBudget,
         isOnlyOneBoxChecked: isOnlyOneBoxChecked(),
         isAnythingSelected: isAnythingSelected(),
         headerIsSelected,
@@ -132,8 +144,10 @@ interface UseBudgetReturnType {
     updateAssignedValue: (i: number, j: number, assigned: number) => void,
     updateLineItemName: (i: number, j: number, name: string) => void,
     deleteLineItem: (i: number, j: number) => void,
+    addTarget: (i: number, j: number, target: Target) => void,
     inputRef: RefObject<HTMLInputElement | null>,
     subBudget: SubBudgetLineItem[],
+    target?: Target,
     isOnlyOneBoxChecked: boolean,
     isAnythingSelected: boolean,
 }

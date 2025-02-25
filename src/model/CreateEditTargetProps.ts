@@ -1,17 +1,19 @@
-import {TargetTimeframe, TargetType, Weekday} from "@/model/Target";
+import {
+    TargetTimeframe,
+    TargetType,
+    Weekday,
+} from "@/model/Target";
 
 export interface CreateEditTargetProps {
     className?: string
-    context: 'create' | 'edit',
+    setIsEditing: (isEditing: boolean) => void,
 }
 
 export interface CreateRecurringTargetProps {
     className?: string,
-    labels: [string, string, string],
-    options: [string[], string[]]
-    useDateSelector?: boolean,
     setters: Setters,
     values: Values,
+    optionsToDisplay?: string[],
 }
 
 export interface CreateCustomTargetProps {
@@ -21,11 +23,13 @@ export interface CreateCustomTargetProps {
 
 export interface OptionsInputProps {
     label: string,
-    options: string[],
+    onChange: (idx: number) => void,
+    optionsToDisplay: string[],
 }
 
 export interface DateInputProps {
-    label: string
+    label: string,
+    setDate: (dueDate: Date | undefined) => void,
 }
 
 export interface AmountInputProps {
@@ -35,15 +39,15 @@ export interface AmountInputProps {
 }
 
 export interface Setters {
-    setRecurrence: (recurrence: TargetTimeframe | undefined) => void,
+    setTimeframe: (timeframe: TargetTimeframe | undefined) => void,
     setAmount: (amount: number) => void,
-    setBy: (dueDate: Weekday | number | Date) => void,
+    setDue: (dueDate: Date | undefined) => void,
     setType: (type: TargetType) => void,
 }
 
 export interface Values {
-    recurrence: TargetTimeframe | undefined,
+    timeframe: TargetTimeframe | undefined,
     amount: number,
-    by: Weekday | number | Date,
+    due: Date | undefined,
     type: TargetType,
 }

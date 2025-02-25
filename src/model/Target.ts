@@ -5,15 +5,18 @@ export const TargetTimeframes = [WEEKLY, MONTHLY, YEARLY];
 export type TargetTimeframe = 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 
 export const SUNDAY = 'Sunday';
-export const MONDAY = 'Monthday';
+export const MONDAY = 'Monday';
 export const TUESDAY = 'Tuesday';
 export const WEDNESDAY = 'Wednesday';
 export const THURSDAY = 'Thursday';
 export const FRIDAY = 'Friday';
 export const SATURDAY = 'Saturday';
-
-export type Weekday = 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
 export const Weekdays = [SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY];
+export type Weekday = 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
+
+export function isWeekday(day: string): day is Weekday {
+    return Weekdays.includes(day);
+}
 
 export const FILL_UP = 'FILL_UP';
 export const SET_ASIDE = 'SET_ASIDE';
@@ -24,14 +27,19 @@ export const TargetTypes = [FILL_UP, SET_ASIDE, HAVE_BALANCE];
 export interface CustomTarget {
     amount: number,
     type: TargetType,
-    due?: Date | number | Weekday,
+    due?: Date
 }
 
-export interface RecurringTarget extends CustomTarget {
-    timeframe: TargetTimeframe
+export interface RecurringTarget extends Omit<CustomTarget, 'due'> {
+    timeframe: TargetTimeframe,
+    due: Date
 }
 
 export type Target = RecurringTarget | CustomTarget;
+
+export function isRecurringTarget(target: Target): target is RecurringTarget {
+    return (target as RecurringTarget).timeframe !== undefined;
+}
 
 export const timeframeMessageMap = {
     [WEEKLY]: ['week', 'By'],

@@ -1,48 +1,52 @@
-'use client'
-
 import {
-    FILL_UP,
+    isRecurringTarget,
     MONTHLY,
     SET_ASIDE,
-    SUNDAY,
     TargetTimeframe,
     TargetType,
-    Weekday,
-    Weekdays,
     WEEKLY,
     YEARLY
 } from "@/model/Target";
 import {useState} from "react";
-import {numToDay, toRegularCase} from "@/common/Formatter";
 import {CreateEditTargetProps} from "@/model/CreateEditTargetProps";
-import {CreateCustomTarget, CreateRecurringTarget} from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/Target/CreateEditTargetServer";
+import {
+    CreateCustomTarget, CreateMonthlyTarget,
+    CreateWeeklyTarget, CreateYearlyTarget
+} from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/Target/CreateEditTargetServer";
 import Button1 from "@/app/components/Button/Button1";
+import UseBudget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/UseBudget";
 
-const weeklyLabels: [string, string, string] = ['I need', 'Every', 'Next week, I want to'];
-const weeklyOptions: [string[], string[]] = [Weekdays.map(day => toRegularCase(day)), [FILL_UP, SET_ASIDE]];
+export default function CreateEditTarget({ setIsEditing }: CreateEditTargetProps) {
+    const { subBudget, addTarget, target } = UseBudget();
+    let passedTimeframe: TargetTimeframe | undefined = WEEKLY;
 
-const monthlyLabels: [string, string, string] = ['I need', 'By', 'Next month, I want to'];
-const monthlyOptions: [string[], string[]] = [Array.from({ length: 31 }, (_, i) => numToDay(i + 1)), [FILL_UP, SET_ASIDE]];
+    if (!!target) {
+        if (isRecurringTarget(target)) {
+            passedTimeframe = target.timeframe;
+        } else {
+            passedTimeframe = undefined;
+        }
+    }
 
-const yearlyLabels: [string, string, string] = ['I need', 'By', 'Next year, I want to'];
-const yearlyOptions: [string[], string[]] = [[], [FILL_UP, SET_ASIDE]];
+    const [timeframe, setTimeframe] = useState<TargetTimeframe | undefined>(passedTimeframe);
+    const [amount, setAmount] = useState<number>(!!target ? target.amount : 0);
+    const [due, setDue] = useState<Date | undefined>(target?.due);
+    const [type, setType] = useState<TargetType>(!!target ? target.type : SET_ASIDE);
 
-export default function CreateEditTarget({ context }: CreateEditTargetProps) {
-    const [recurrence, setRecurrence] = useState<TargetTimeframe | undefined>(WEEKLY);
-    const [amount, setAmount] = useState<number>(0);
-    const [by, setBy] = useState<Weekday | number | Date>(SUNDAY);
-    const [type, setType] = useState<TargetType>(SET_ASIDE);
+    const setters = {setTimeframe, setAmount, setDue, setType};
+    const values = {timeframe, amount, due, type};
 
-    const setters = {setRecurrence, setAmount, setBy, setType};
-    const values = {recurrence, amount, by, type};
-
+    const onSaveTarget = () => {
+        addTarget(subBudget[0].index.i, subBudget[0].index.j, values);
+        setIsEditing(false);
+    }
 
     const className = 'text-sm rounded hover:bg-sidebarBackground transition-colors';
 
     const onClick = (timeframe: TargetTimeframe | undefined) => {
-        setRecurrence(timeframe);
+        setTimeframe(timeframe);
         setAmount(0);
-        setBy(SUNDAY);
+        setDue(undefined);
         setType(SET_ASIDE);
     }
 
@@ -54,15 +58,15 @@ export default function CreateEditTarget({ context }: CreateEditTargetProps) {
             <button className={className} onClick={() => onClick(undefined)}>Custom</button>
         </div>
         {
-            recurrence === WEEKLY ?
-                <CreateRecurringTarget labels={weeklyLabels} options={weeklyOptions} setters={setters} values={values}/> :
-                recurrence === MONTHLY ?
-                    <CreateRecurringTarget labels={monthlyLabels} options={monthlyOptions} setters={setters} values={values}/> :
-                    recurrence === YEARLY ?
-                        <CreateRecurringTarget labels={yearlyLabels} options={yearlyOptions} useDateSelector={true}
-                                               setters={setters} values={values}/> :
+            timeframe === WEEKLY ?
+                <CreateWeeklyTarget setters={setters} values={values}/> :
+                timeframe === MONTHLY ?
+                    <CreateMonthlyTarget setters={setters} values={values}/> :
+                    timeframe === YEARLY ?
+                        <CreateYearlyTarget setters={setters} values={values}/>
+                        :
                         <CreateCustomTarget setters={setters} values={values}/>
         }
-        <Button1 className='m-2' text='Save Target' />
+        <Button1 onClick={onSaveTarget} className='m-2' text='Save Target' />
     </div>;
 }

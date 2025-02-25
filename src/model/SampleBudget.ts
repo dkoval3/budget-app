@@ -15,7 +15,7 @@ export const sampleBudget: Budget = [
                     amount: 1800,
                     type: SET_ASIDE,
                     timeframe: MONTHLY,
-                    due: 1,
+                    due: new Date(2025, 1, 23),
                 }
             },
             {
@@ -26,7 +26,7 @@ export const sampleBudget: Budget = [
                     amount: 300,
                     type: SET_ASIDE,
                     timeframe: MONTHLY,
-                    due: 1,
+                    due: new Date(2025, 1, 20),
                 }
             },
             {
@@ -50,7 +50,7 @@ export const sampleBudget: Budget = [
                     amount: 100,
                     timeframe: WEEKLY,
                     type: HAVE_BALANCE,
-                    due: SUNDAY,
+                    due: new Date(2025, 1, 16),
                 }
             },
             {
