@@ -28,7 +28,13 @@ const CategoryHeader = ({}) => {
     return(
         <div className='relative'>
             <div className='flex justify-between items-center m-2'>
-                <div className='text-xl'>{subBudget.length === 1 ? subBudget[0].lineItem : `${subBudget.length} Categories Selected`}</div>
+                <div className={'flex flex-col'}>
+                    <div className='text-xl'>{subBudget.length === 1 ? subBudget[0].lineItem : `${subBudget.length} Categories Selected`}</div>
+                    { subBudget.length > 1
+                        ? <div className='text-xs mt-2'>{subBudget.map(item => item.lineItem).join(', ')}</div>
+                        : null
+                    }
+                </div>
                 { isOnlyOneBoxChecked
                     ?
                     <button>

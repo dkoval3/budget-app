@@ -12,6 +12,7 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         sidebarBackground: "#14212F",
+        sidebarBackground2: "#1A2837",
         blue1: "#829CF7",
         blue1Hover: "#577BF6",
         green1: "#346012",
