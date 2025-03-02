@@ -6,15 +6,12 @@ import SelectedCellsSummary from "@/app/components/BudgetPage/BudgetContainer/Bu
 
 export default function BudgetPanel() {
   return (
-      <BudgetProvider>
-          <div className='flex w-full h-full'>
-              <div className='flex flex-col w-full h-full'>
-                  <BudgetOperationsBar />
-                  <BudgetTable />
-              </div>
-              <SelectedCellsSummary className='flex flex-col w-80 h-full' />
+      <div className='flex w-full h-full'>
+          <div className='flex flex-col w-full h-full'>
+              <BudgetOperationsBar />
+              <BudgetTable />
           </div>
-      </BudgetProvider>
-
+          <SelectedCellsSummary className='flex flex-col w-80 h-full' />
+      </div>
   );
 }

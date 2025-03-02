@@ -2,6 +2,13 @@ import {Target} from "@/model/Target";
 
 export type Budget = BudgetCategory[];
 
+export type BudgetObject = {
+    budget: Budget,
+    metadata: {
+        amountToAssign: number
+    },
+}
+
 export interface BudgetCategory {
     categoryName: string,
     lineItems: BudgetLineItem[],

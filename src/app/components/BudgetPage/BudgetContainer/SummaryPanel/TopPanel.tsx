@@ -12,7 +12,7 @@ export default function TopPanel() {
         <div className='flex justify-between flex-col mt-2 w-full h-28 border-b-[0.5px] border-gray-500'>
             <div className='flex justify-between mb-3'>
                 <MonthNavigator month={month} year={year}/>
-                <AmountToAssign amount={1}/>
+                <AmountToAssign />
                 <AgeOfMoney days={ageOfMoney}/>
             </div>
             <BudgetFilters/>

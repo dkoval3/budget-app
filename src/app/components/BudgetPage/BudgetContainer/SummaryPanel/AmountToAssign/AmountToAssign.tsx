@@ -1,6 +1,10 @@
-import { formatAsDollarAmount } from "@/common/Formatter";
+'use client'
 
-export default function AmountToAssign({ amount }: AmountToAssignProps) {
+import { formatAsDollarAmount } from "@/common/Formatter";
+import UseBudget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/UseBudget";
+
+export default function AmountToAssign({ className }: AmountToAssignProps) {
+    const { amountToAssign } = UseBudget();
     const {
         message,
         buttonMessage,
@@ -8,19 +12,19 @@ export default function AmountToAssign({ amount }: AmountToAssignProps) {
         backgroundColor,
         buttonBackgroundColor,
         buttonBackgroundColorHover,
-        textColor } = getStyles(amount);
+        textColor } = getStyles(amountToAssign);
 
     return (
-        <div className={`${backgroundColor} ${textColor} flex items-center justify-between w-64 h-16 px-3 mr-32 rounded-xl`}>
+        <div className={`${className} ${backgroundColor} ${textColor} flex items-center justify-between w-64 h-16 px-3 mr-32 rounded-xl`}>
             <div className='flex flex-col font-bold'>
-                <div className='text-lg'>{formatAsDollarAmount(amount)}</div>
+                <div className='text-lg'>{formatAsDollarAmount(amountToAssign)}</div>
                 <div className={`text-xs`}>{message}</div>
             </div>
             {
-                amount !== 0 ?
-                    <button className={`${buttonBackgroundColor} hover:${buttonBackgroundColorHover} flex px-2 py-1 rounded`}>
+                amountToAssign !== 0 ?
+                    <button className={`${buttonBackgroundColor} ${buttonBackgroundColorHover} flex px-2 py-1 rounded`}>
                         <div>{buttonMessage}</div>
-                        { amount > 0 ? <i className="bi bi-caret-down-fill pl-1"></i> : null}
+                        { amountToAssign > 0 ? <i className="bi bi-caret-down-fill pl-1"></i> : null}
                     </button> :
                     <i className={`${buttonIcon} text-3xl`}></i>
             }
@@ -35,7 +39,7 @@ const getStyles = (amount: number) => {
             buttonMessage: 'Assign',
             backgroundColor: 'bg-green1',
             buttonBackgroundColor: 'bg-green2',
-            buttonBackgroundColorHover: 'bg-green2Hover'
+            buttonBackgroundColorHover: 'hover:bg-green2Hover'
         };
     }
     if (amount < 0) {
@@ -44,7 +48,7 @@ const getStyles = (amount: number) => {
             buttonMessage: 'Fix',
             backgroundColor: 'bg-red1',
             buttonBackgroundColor: 'bg-red2',
-            buttonBackgroundColorHover: 'bg-red2Hover'
+            buttonBackgroundColorHover: 'hover:bg-red2Hover'
         };
     }
     return {
@@ -56,5 +60,5 @@ const getStyles = (amount: number) => {
 }
 
 interface AmountToAssignProps {
-    amount: number
+    className?: string,
 }

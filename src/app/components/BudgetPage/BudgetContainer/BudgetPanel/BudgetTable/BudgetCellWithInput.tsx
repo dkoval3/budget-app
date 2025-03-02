@@ -9,7 +9,14 @@ export default function BudgetCellWithInput (
         message,
         isSelected = false,
     }: BudgetCellProps) {
-    const { inputRef, updateAssignedValue, isOnlyOneBoxChecked } = UseBudget();
+    const {
+        inputRef,
+        getLineItem,
+        updateAssignedValue,
+        setAmountToAssign,
+        amountToAssign,
+        isOnlyOneBoxChecked
+    } = UseBudget();
 
     return (
         <td className={`${className} w-28`}>
@@ -17,7 +24,13 @@ export default function BudgetCellWithInput (
                 <input className='bg-background w-full text-right rounded border-2 border-blue-700'
                        type='text'
                        defaultValue={message}
-                       onBlur={(e) => updateAssignedValue(index.i, index.j, parseFloat(e.target.value))}
+                       onBlur={(e) => {
+                           const amountInput = parseFloat(e.target.value);
+                           const previouslyAssigned = getLineItem(index.i, index.j).assigned;
+                           const difference = amountInput - previouslyAssigned;
+                           updateAssignedValue(index.i, index.j, amountInput);
+                           setAmountToAssign(amountToAssign - difference);
+                       }}
                        autoFocus={isOnlyOneBoxChecked}
                        ref={inputRef}
                 />

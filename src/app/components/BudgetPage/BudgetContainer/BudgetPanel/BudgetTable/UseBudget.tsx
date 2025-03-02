@@ -2,7 +2,7 @@
 
 import React, {RefObject, useContext, useRef, useState} from "react";
 import {useImmer} from "use-immer";
-import {Budget, newBudgetCategoryGroup, SubBudgetLineItem} from "@/model/BudgetTypes";
+import {Budget, BudgetCategory, BudgetLineItem, newBudgetCategoryGroup, SubBudgetLineItem} from "@/model/BudgetTypes";
 import {WritableDraft} from "immer";
 import {sampleBudget} from "@/model/SampleBudget";
 import {Target} from "@/model/Target";
@@ -10,7 +10,8 @@ import {Target} from "@/model/Target";
 export const BudgetContext = React.createContext({} as UseBudgetReturnType);
 
 function useBudget() {
-    const [budgetObject, updateBudgetObject] = useImmer(sampleBudget);
+    const [budgetObject, updateBudgetObject] = useImmer<BudgetCategory[]>(sampleBudget.budget);
+    const [amountToAssign, setAmountToAssign] = useState(sampleBudget.metadata.amountToAssign);
     const [headerIsSelected, setHeaderIsSelected] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -60,6 +61,10 @@ function useBudget() {
             draft[i].lineItems[j].assigned = assigned;
         })
     };
+
+    const getLineItem = (i: number, j: number) => {
+        return budgetObject[i].lineItems[j];
+    }
 
     const updateLineItemName = (i: number, j: number, name: string ) => {
         updateBudgetObject(draft => {
@@ -125,6 +130,9 @@ function useBudget() {
     return {
         budgetObject,
         numberOfCategoryGroups: budgetObject.length,
+        amountToAssign,
+        setAmountToAssign,
+        getLineItem,
         switchBox,
         switchAllBoxes,
         switchCategoryBoxes,
@@ -161,6 +169,9 @@ interface UseBudgetReturnType {
     budgetObject: Budget,
     numberOfCategoryGroups: number
     headerIsSelected: boolean,
+    amountToAssign: number,
+    setAmountToAssign: (amount: number) => void,
+    getLineItem: (i: number, j: number) => BudgetLineItem,
     switchBox: (i: number, j: number) => void,
     switchAllBoxes: () => void,
     switchCategoryBoxes: (i: number) => void,
