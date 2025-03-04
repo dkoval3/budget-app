@@ -1,6 +1,6 @@
 import Button1 from "@/app/components/Button/Button1";
 import {useState} from "react";
-import UseBudget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/UseBudget";
+import UseBudget from "@/app/components/Hooks/UseBudget";
 import {notEmptyOrNull} from "@/common/Formatter";
 
 const runValidation = (category: string) => {

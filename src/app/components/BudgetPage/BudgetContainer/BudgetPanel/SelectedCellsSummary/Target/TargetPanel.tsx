@@ -1,7 +1,7 @@
 'use client'
 
 import {useState} from "react";
-import UseBudget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/UseBudget";
+import UseBudget from "@/app/components/Hooks/UseBudget";
 import {isRecurringTarget, MONTHLY, Target, timeframeMessageMap, WEEKLY, YEARLY} from "@/model/Target";
 import NoTarget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/Target/NoTarget";
 import {formatAsDollarAmount, nextMonthMessage, numToDay} from "@/common/Formatter";

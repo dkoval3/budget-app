@@ -3,7 +3,7 @@
 import AvailableBalance
     from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/AvailableBalance";
 import TargetPanel from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/Target/TargetPanel";
-import UseBudget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/UseBudget";
+import UseBudget from "@/app/components/Hooks/UseBudget";
 import {useState} from "react";
 
 export default function SelectedCellsSummary({className}: SelectedCellsSummaryProps) {

@@ -1,5 +1,5 @@
 import {BudgetCategoryRowProps} from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetTableProps";
-import BudgetCell from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetCell";
+import BudgetCell from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/Cells/BudgetCell";
 
 export default function BudgetCategoryRow({ item, index, onClick, className }: BudgetCategoryRowProps) {
     return <tr className={`${className} text-right border-[0.5px] border-gray-700 font-bold text-lg bg-sidebarBackground`}>

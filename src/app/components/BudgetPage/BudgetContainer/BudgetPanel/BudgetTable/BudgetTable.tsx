@@ -2,9 +2,9 @@
 
 import {generateCategoryLineItem} from "@/model/BudgetTypes";
 import {BudgetTableProps} from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetTableProps";
-import UseBudget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/UseBudget";
-import BudgetRow from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetRow";
-import BudgetCategoryRow from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetCategoryRow";
+import UseBudget from "@/app/components/Hooks/UseBudget";
+import BudgetRow from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/Rows/BudgetRow";
+import BudgetCategoryRow from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/Rows/BudgetCategoryRow";
 
 export default function BudgetTable({ className }: BudgetTableProps) {
     const {

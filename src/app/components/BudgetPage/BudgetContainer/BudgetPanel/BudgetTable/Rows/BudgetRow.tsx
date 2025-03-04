@@ -1,7 +1,7 @@
-import BudgetCell from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetCell";
+import BudgetCell from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/Cells/BudgetCell";
 import {BudgetRowProps} from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetTableProps";
 import BudgetCellWithInput
-    from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetCellWithInput";
+    from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/Cells/BudgetCellWithInput";
 
 export default function BudgetRow({ item, index, onClick, className }: BudgetRowProps) {
     return <tr className={`${className} text-right border-[0.5px] border-gray-700`}>

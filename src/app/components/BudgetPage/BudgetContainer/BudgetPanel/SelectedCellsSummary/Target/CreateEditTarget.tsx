@@ -14,7 +14,7 @@ import {
     CreateWeeklyTarget, CreateYearlyTarget
 } from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/Target/CreateEditTargetServer";
 import Button1 from "@/app/components/Button/Button1";
-import UseBudget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/UseBudget";
+import UseBudget from "@/app/components/Hooks/UseBudget";
 
 export default function CreateEditTarget({ setIsEditing }: CreateEditTargetProps) {
     const { subBudget, addTarget, target } = UseBudget();

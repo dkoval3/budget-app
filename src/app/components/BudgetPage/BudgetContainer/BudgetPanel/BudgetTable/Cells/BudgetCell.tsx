@@ -1,7 +1,7 @@
 import {formatAsDollarAmount} from "@/common/Formatter";
 import {BudgetCellProps} from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetTableProps";
 import {useState} from "react";
-import AddCategoryPopup from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/AddCategoryPopup";
+import AddCategoryPopup from "@/app/components/Popups/AddCategoryPopup";
 
 export default function BudgetCell(
     {

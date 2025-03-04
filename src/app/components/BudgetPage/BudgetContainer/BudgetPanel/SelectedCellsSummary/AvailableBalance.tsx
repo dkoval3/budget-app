@@ -2,7 +2,7 @@
 
 import {useState} from "react";
 import {formatAsDollarAmount} from "@/common/Formatter";
-import UseBudget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/UseBudget";
+import UseBudget from "@/app/components/Hooks/UseBudget";
 import {newBudgetLineItem} from "@/model/BudgetTypes";
 
 const availableBalanceCells = ['Cash Left Over From Last Month', 'Assigned This Month', 'Spending'];

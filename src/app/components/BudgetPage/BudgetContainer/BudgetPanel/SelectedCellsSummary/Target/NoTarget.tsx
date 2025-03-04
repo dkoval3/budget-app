@@ -2,7 +2,7 @@
 
 import {targetMessage} from "@/common/MessageConstants";
 import Button1 from "@/app/components/Button/Button1";
-import UseBudget from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/UseBudget";
+import UseBudget from "@/app/components/Hooks/UseBudget";
 
 export default function NoTarget({ setIsEditing }: { setIsEditing: (isEditing: boolean) => void}) {
     const { subBudget } = UseBudget();
