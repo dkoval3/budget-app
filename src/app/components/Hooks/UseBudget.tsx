@@ -2,18 +2,37 @@
 
 import React, {RefObject, useContext, useRef, useState} from "react";
 import {useImmer} from "use-immer";
-import {Budget, BudgetCategory, BudgetLineItem, newBudgetCategoryGroup, SubBudgetLineItem} from "@/model/BudgetTypes";
+import {
+    Budget,
+    BudgetCategory,
+    BudgetLineItem,
+    newBudgetCategoryGroup,
+    SubBudgetLineItem
+} from "@/model/BudgetTypes";
 import {WritableDraft} from "immer";
 import {sampleBudget} from "@/model/SampleBudget";
 import {Target} from "@/model/Target";
+import {
+    BudgetAction,
+    BudgetHistory,
+} from "@/model/history/BudgetHistoryTypes";
+import {applyUndo} from "@/common/UndoRedoUtil";
 
 export const BudgetContext = React.createContext({} as UseBudgetReturnType);
 
+const calculateTotalAssigned = (budgetObject: Budget) => {
+    return budgetObject.reduce((categoryAccumulator, categoryCurrent) => {
+        return categoryAccumulator + categoryCurrent.lineItems.reduce((itemAccumulator, itemCurrent) => {
+            return itemAccumulator + itemCurrent.assigned;
+        }, 0);
+    }, 0);
+};
+
 function useBudget() {
     const [budgetObject, updateBudgetObject] = useImmer<BudgetCategory[]>(sampleBudget.budget);
-    const [amountToAssign, setAmountToAssign] = useState(sampleBudget.metadata.amountToAssign);
     const [headerIsSelected, setHeaderIsSelected] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
+    const [undoList, updateUndoList] = useImmer<BudgetHistory>([]);
 
     const switchBoxes = (i: number, j: number, isCategoryHeader: boolean) => isCategoryHeader ? switchCategoryBoxes(i) : switchBox(i, j);
 
@@ -57,6 +76,7 @@ function useBudget() {
     }
 
     const updateAssignedValue = (i: number, j: number, assigned: number) => {
+        addToUndoList({ action: 'item_update', toAdd: budgetObject[i].lineItems[j], index: { i, j } });
         updateBudgetObject(draft => {
             draft[i].lineItems[j].assigned = assigned;
         })
@@ -67,27 +87,31 @@ function useBudget() {
     }
 
     const updateLineItemName = (i: number, j: number, name: string ) => {
+        addToUndoList({ action: 'item_update', toAdd: budgetObject[i].lineItems[j], index: { i, j } });
         updateBudgetObject(draft => {
             draft[i].lineItems[j].lineItem = name;
         });
     }
 
     const addTarget = (i: number, j: number, target: Target) => {
+        addToUndoList({ action: 'item_update', toAdd: budgetObject[i].lineItems[j], index: { i, j } });
         updateBudgetObject(draft => {
             draft[i].lineItems[j].target = target;
         });
     }
 
     const addLineItem = (i: number, name: string) => {
+        const toAdd = {
+            lineItem: name,
+            assigned: 0,
+            activity: 0,
+            isSelected: false,
+            isCategoryHeader: false
+        };
         updateBudgetObject(draft => {
-            draft[i].lineItems.unshift({
-                lineItem: name,
-                assigned: 0,
-                activity: 0,
-                isSelected: false,
-                isCategoryHeader: false
-            });
+            draft[i].lineItems.unshift(toAdd)
         });
+        addToUndoList({ toAdd, action: 'item_add', index: { i, j: budgetObject[i].lineItems.length - 1 }});
     }
 
     const addCategoryGroup = (name: string) => {
@@ -96,11 +120,21 @@ function useBudget() {
             newGroup.categoryName = name;
             draft.push(newGroup);
         });
+        addToUndoList({
+            action: 'category_add',
+            index: { i: budgetObject.length, j: -1 },
+            toAdd: {} as BudgetCategory,
+        });
     };
 
     const deleteLineItem = (i: number, j: number) => {
         updateBudgetObject(draft => {
            draft[i].lineItems.splice(j, 1);
+        });
+        addToUndoList({
+            action: 'item_delete',
+            index: { i, j },
+            toAdd: budgetObject[i].lineItems[j]
         });
     }
 
@@ -124,14 +158,32 @@ function useBudget() {
         return budgetObject.some(budgetCategory => budgetCategory.isSelected);
     };
 
+    const addToUndoList = (modification: BudgetAction) => {
+        updateUndoList(draft => {
+            draft.push(modification);
+        });
+    };
+    const popFromUndoList = () => {
+        updateUndoList(draft => {
+            draft.pop();
+        });
+    };
+
+    const undo = () => {
+        if (undoList.length === 0) return;
+        const modification = undoList[undoList.length - 1];
+        applyUndo(modification, updateBudgetObject)
+        popFromUndoList();
+    };
+
     const subBudget = subBudgetFromSelected();
     const target = subBudget.length === 1 ? subBudget[0]?.target : undefined;
 
     return {
         budgetObject,
         numberOfCategoryGroups: budgetObject.length,
-        amountToAssign,
-        setAmountToAssign,
+        amountToAssign: sampleBudget.metadata.totalAvailable - calculateTotalAssigned(budgetObject),
+        undo,
         getLineItem,
         switchBox,
         switchAllBoxes,
@@ -170,7 +222,6 @@ interface UseBudgetReturnType {
     numberOfCategoryGroups: number
     headerIsSelected: boolean,
     amountToAssign: number,
-    setAmountToAssign: (amount: number) => void,
     getLineItem: (i: number, j: number) => BudgetLineItem,
     switchBox: (i: number, j: number) => void,
     switchAllBoxes: () => void,
@@ -179,6 +230,7 @@ interface UseBudgetReturnType {
     updateAssignedValue: (i: number, j: number, assigned: number) => void,
     updateLineItemName: (i: number, j: number, name: string) => void,
     addLineItem: (i: number, name: string) => void,
+    undo: () => void,
     addCategoryGroup: (name: string) => void,
     deleteLineItem: (i: number, j: number) => void,
     addTarget: (i: number, j: number, target: Target) => void,

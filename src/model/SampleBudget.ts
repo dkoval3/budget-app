@@ -3,7 +3,7 @@ import {FILL_UP, HAVE_BALANCE, MONTHLY, SET_ASIDE, WEEKLY} from "@/model/Target"
 
 export const sampleBudget: BudgetObject = {
     metadata: {
-        amountToAssign: 6000,
+        totalAvailable: 6000,
     },
     budget: [{
         categoryName: 'Needs',

@@ -5,11 +5,11 @@ export type Budget = BudgetCategory[];
 export type BudgetObject = {
     budget: Budget,
     metadata: {
-        amountToAssign: number
+        totalAvailable: number
     },
 }
 
-export interface BudgetCategory {
+export type BudgetCategory = {
     categoryName: string,
     lineItems: BudgetLineItem[],
     isSelected: boolean,
@@ -24,7 +24,9 @@ export type BudgetLineItem = {
     target?: Target,
 };
 
-export type SubBudgetLineItem = BudgetLineItem & { index: { i: number, j: number } };
+export type SubBudgetLineItem = BudgetLineItem & {
+    index: { i: number, j: number }
+};
 
 export function newBudgetLineItem(): BudgetLineItem {
     return { lineItem: '', assigned: 0, activity: 0, isSelected: false, isCategoryHeader: false };
@@ -54,4 +56,3 @@ export function generateCategoryLineItem(budgetCategory: BudgetCategory): Budget
         return previousVal;
     }, categoryLineItem);
 }
-

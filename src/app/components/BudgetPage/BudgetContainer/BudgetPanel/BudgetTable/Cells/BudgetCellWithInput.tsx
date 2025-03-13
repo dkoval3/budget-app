@@ -13,7 +13,6 @@ export default function BudgetCellWithInput (
         inputRef,
         getLineItem,
         updateAssignedValue,
-        setAmountToAssign,
         amountToAssign,
         isOnlyOneBoxChecked
     } = UseBudget();
@@ -26,10 +25,7 @@ export default function BudgetCellWithInput (
                        defaultValue={message}
                        onBlur={(e) => {
                            const amountInput = parseFloat(e.target.value);
-                           const previouslyAssigned = getLineItem(index.i, index.j).assigned;
-                           const difference = amountInput - previouslyAssigned;
                            updateAssignedValue(index.i, index.j, amountInput);
-                           setAmountToAssign(amountToAssign - difference);
                        }}
                        autoFocus={isOnlyOneBoxChecked}
                        ref={inputRef}

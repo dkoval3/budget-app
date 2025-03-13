@@ -3,9 +3,11 @@
 import Button from "@/app/components/Button/Button";
 import {useState} from "react";
 import AddCategoryPopup from "@/app/components/Popups/AddCategoryPopup";
+import UseBudget from "@/app/components/Hooks/UseBudget";
 
 export default function BudgetOperationsBar() {
     const [popupIsClosed, setPopupIsClosed] = useState(true);
+    const { undo } = UseBudget();
     return (
         <div className='flex border-y-[0.5px] border-gray-700'>
             <div className='flex relative'>
@@ -22,7 +24,12 @@ export default function BudgetOperationsBar() {
                     />
                     : null }
             </div>
-            <Button className='hover:bg-buttonHover mx-1' iconName='bi bi-arrow-counterclockwise' message='Undo'/>
+            <Button
+                className='hover:bg-buttonHover mx-1'
+                iconName='bi bi-arrow-counterclockwise'
+                message='Undo'
+                onClick={() => undo()}
+            />
             <Button className='hover:bg-buttonHover mx-1' iconName='bi bi-arrow-clockwise' message='Redo'/>
             <Button className='hover:bg-buttonHover mx-1' iconName='bi bi-clock-history' message='Recent Moves'/>
         </div>
