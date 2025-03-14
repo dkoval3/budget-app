@@ -1,6 +1,13 @@
 import {ChangeEvent, useRef, useState} from "react";
 
-export function BudgetTypeahead({ className, setValue, options, width }: BudgetTypeaheadProps) {
+export function BudgetTypeahead(
+    {
+        className,
+        options,
+        width,
+        onChange = () => {},
+        onSelect = () => {},
+    }: BudgetTypeaheadProps) {
     const [filteredOptions, setFilteredOptions] = useState(options);
     const [showOptions, setShowOptions] = useState(false);
     const [typeaheadValue, setTypeaheadValue] = useState('');
@@ -8,10 +15,10 @@ export function BudgetTypeahead({ className, setValue, options, width }: BudgetT
 
     const filterOptions = (value: string) => options.filter(item => item.toLowerCase().includes(value.toLowerCase()));
 
-    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const internalOnChange = (e: ChangeEvent<HTMLInputElement>) => {
         setTypeaheadValue(e.target.value);
-        setValue(e.target.value);
         setFilteredOptions(filterOptions(e.target.value));
+        onChange();
     }
 
     return(
@@ -23,7 +30,7 @@ export function BudgetTypeahead({ className, setValue, options, width }: BudgetT
                 value={typeaheadValue}
                 onFocus={() => setShowOptions(true)}
                 onBlur={() => setShowOptions(false)}
-                onChange={onChange}
+                onChange={internalOnChange}
             />
             <ul className='flex flex-col items-start absolute max-h-44 w-full overflow-y-scroll bg-sidebarBackground'>
                 {
@@ -34,7 +41,7 @@ export function BudgetTypeahead({ className, setValue, options, width }: BudgetT
                                 key={idx}
                                 onClick={() => {
                                     setTypeaheadValue(item);
-                                    setValue(item);
+                                    onSelect(item, idx);
                                     setFilteredOptions(filterOptions(item));
                                     ref.current?.blur();
                                 }}
@@ -53,6 +60,7 @@ export function BudgetTypeahead({ className, setValue, options, width }: BudgetT
 interface BudgetTypeaheadProps {
     className?: string,
     width?: string
-    setValue: (value: string) => void,
+    onSelect?: (v: string, i: number) => void,
+    onChange?: () => void,
     options: string[],
 }

@@ -1,22 +1,38 @@
 import UseBudget from "@/app/components/Hooks/UseBudget";
-import {useState} from "react";
+import {ChangeEvent, useState} from "react";
 import Button1 from "@/app/components/Button/Button1";
 import {BudgetTypeahead} from "@/app/components/Common/BudgetTypeahead";
 
 export default function ManualTab({ className, setShow }: ManualTabProps) {
-    const { amountToAssign, budgetObject } = UseBudget();
+    const { amountToAssign, budgetObject, updateAssignedValue } = UseBudget();
     const [assign, setAssign] = useState(amountToAssign.toString());
-    const [toCategory, setToCategory] = useState('');
+    const [idx, setIdx] = useState<{ i: number, j: number } | undefined>(undefined);
 
-    const options: string[] = budgetObject.flatMap(categoryGroup => {
-        return categoryGroup.lineItems.map(lineItem => {
+    const indexes: { i: number, j: number }[] = [];
+    const options: string[] = budgetObject.flatMap((categoryGroup, i) => {
+        return categoryGroup.lineItems.map((lineItem, j) => {
+            indexes.push({ i, j });
             return `${categoryGroup.categoryName}: ${lineItem.lineItem}`;
         });
     });
 
     const submit = () => {
+        if (idx === undefined) {
+            alert('Please select a category to which you want to assign money');
+            return;
+        }
+        const { i, j } = idx;
+        updateAssignedValue(i, j, parseFloat(assign) + budgetObject[i].lineItems[j].assigned);
         setShow(false);
     }
+
+    const onSelect = (_item: string, idx: number)=> {
+        setIdx(indexes[idx]);
+    };
+
+    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setAssign(parseFloat(e.target.value).toString());
+    };
 
     return (
         <div className={`${className}`}>
@@ -26,14 +42,15 @@ export default function ManualTab({ className, setShow }: ManualTabProps) {
                     className='bg-sidebarBackground p-1 w-64'
                     type='text'
                     autoFocus={true}
-                    onChange={(e) => setAssign(parseFloat(e.target.value).toString())}
+                    onChange={onChange}
                     defaultValue={amountToAssign} />
             </div>
             <div className='my-4'>
                 <label>To:</label>
                 <BudgetTypeahead
+                    onChange={() => setIdx(undefined)}
+                    onSelect={onSelect}
                     options={options}
-                    setValue={setAssign}
                     width='w-64'
                 />
 

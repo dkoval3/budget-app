@@ -36,12 +36,24 @@ function useBudget() {
 
     const switchBoxes = (i: number, j: number, isCategoryHeader: boolean) => isCategoryHeader ? switchCategoryBoxes(i) : switchBox(i, j);
 
-    const switchAllBoxes = () => {
+    const switchAllBoxes = (v: boolean | undefined = undefined) => {
         updateBudgetObject(draft => {
             draft.forEach(budgetCategory => {
-                budgetCategory.isSelected = !headerIsSelected;
+                budgetCategory.isSelected = v ? v : !headerIsSelected;
                 budgetCategory.lineItems.forEach(lineItem => {
-                    lineItem.isSelected = !headerIsSelected;
+                    lineItem.isSelected = v ? v : !headerIsSelected;
+                });
+            });
+            updateHeaderIsSelected(draft);
+        })
+    };
+
+    const unselectAllExcept = (i: number, j: number) => {
+        updateBudgetObject(draft => {
+            draft.forEach((budgetCategory, i1) => {
+                budgetCategory.isSelected = i1 === i;
+                budgetCategory.lineItems.forEach((lineItem, j1) => {
+                    lineItem.isSelected = i1 === i && j1 === j;
                 });
             });
             updateHeaderIsSelected(draft);
@@ -58,9 +70,9 @@ function useBudget() {
         });
     };
 
-    const switchBox = (i: number, j: number) => {
+    const switchBox = (i: number, j: number, v: boolean | undefined = undefined) => {
         updateBudgetObject(draft => {
-            draft[i].lineItems[j].isSelected = !draft[i].lineItems[j].isSelected;
+            draft[i].lineItems[j].isSelected = v ? v : !draft[i].lineItems[j].isSelected;
             if (draft[i].lineItems[j].isSelected) {
                 draft[i].isSelected = true;
             } else if (!draft[i].lineItems.some(item => item.isSelected)) {
@@ -187,6 +199,7 @@ function useBudget() {
         getLineItem,
         switchBox,
         switchAllBoxes,
+        unselectAllExcept,
         switchCategoryBoxes,
         switchBoxes,
         updateAssignedValue,
@@ -223,8 +236,9 @@ interface UseBudgetReturnType {
     headerIsSelected: boolean,
     amountToAssign: number,
     getLineItem: (i: number, j: number) => BudgetLineItem,
-    switchBox: (i: number, j: number) => void,
-    switchAllBoxes: () => void,
+    switchBox: (i: number, j: number, v?: boolean) => void,
+    switchAllBoxes: (v?: boolean) => void,
+    unselectAllExcept: (i: number, j: number) => void,
     switchCategoryBoxes: (i: number) => void,
     switchBoxes: (i: number, j: number, isCategoryHeader: boolean) => void,
     updateAssignedValue: (i: number, j: number, assigned: number) => void,
