@@ -10,13 +10,15 @@ import {
     SubBudgetLineItem
 } from "@/model/BudgetTypes";
 import {WritableDraft} from "immer";
-import {sampleBudget} from "@/model/SampleBudget";
+import {sampleBudget} from "@/model/Test/SampleBudget";
 import {Target} from "@/model/Target";
 import {
     BudgetAction,
     BudgetHistory,
 } from "@/model/history/BudgetHistoryTypes";
 import {applyUndo} from "@/common/UndoRedoUtil";
+import {sampleAccounts} from "@/model/Test/SampleCashAccount";
+import {Account} from "@/model/Account";
 
 export const BudgetContext = React.createContext({} as UseBudgetReturnType);
 
@@ -30,9 +32,26 @@ const calculateTotalAssigned = (budgetObject: Budget) => {
 
 function useBudget() {
     const [budgetObject, updateBudgetObject] = useImmer<BudgetCategory[]>(sampleBudget.budget);
+    const [accounts, updateAccounts] = useImmer<Account[]>(sampleAccounts);
+    const [currentAccountIdx, setCurrentAccountIdx] = useState(0);
     const [headerIsSelected, setHeaderIsSelected] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const [undoList, updateUndoList] = useImmer<BudgetHistory>([]);
+
+    const addTransaction = (idx: number) => {
+        updateAccounts(draft => {
+            draft[idx].transactions.push({
+                id: crypto.randomUUID(),
+                date: new Date(),
+                payee: '',
+                category: '',
+                categoryId: '',
+                categoryIdx: 0,
+                notes: '',
+                amount: 0,
+            });
+        })
+    }
 
     const switchBoxes = (i: number, j: number, isCategoryHeader: boolean) => isCategoryHeader ? switchCategoryBoxes(i) : switchBox(i, j);
 
@@ -214,6 +233,10 @@ function useBudget() {
         isAnythingSelected: isAnythingSelected(),
         headerIsSelected,
         inputRef,
+        accounts,
+        currentAccount: accounts[currentAccountIdx],
+        currentAccountIdx,
+        addTransaction,
     };
 }
 
@@ -232,6 +255,9 @@ export default function UseBudget() {
 
 interface UseBudgetReturnType {
     budgetObject: Budget,
+    accounts: Account[],
+    currentAccount: Account,
+    currentAccountIdx: number,
     numberOfCategoryGroups: number
     headerIsSelected: boolean,
     amountToAssign: number,
@@ -253,4 +279,5 @@ interface UseBudgetReturnType {
     target?: Target,
     isOnlyOneBoxChecked: boolean,
     isAnythingSelected: boolean,
+    addTransaction: (idx: number) => void,
 }

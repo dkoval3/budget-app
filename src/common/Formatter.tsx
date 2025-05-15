@@ -5,6 +5,10 @@ export function formatAsDollarAmount(amount: string | number) {
     return `${amount < 0 ? '-': ''}$${Math.abs(Number(amount)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
 }
 
+export function formatAsDate(date: Date, separator: string = '/') {
+    return `${date.getMonth()}${separator}${date.getDay() + 1}${separator}${date.getFullYear()}`
+}
+
 export function numToDay(num: number | string) {
     if (typeof num === 'string') num = parseInt(num);
     switch (num) {
