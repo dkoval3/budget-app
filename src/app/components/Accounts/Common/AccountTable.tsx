@@ -15,7 +15,7 @@ export default function AccountTable({className}: AccountTableProps) {
                 </thead>
                 <tbody>
                 {
-                    currentAccount.transactions.map((tx, i) => <TransactionRow transaction={tx} key={i} idx={i}/>)
+                    currentAccount.transactions.map((tx, i) => <TransactionRow transaction={tx} key={tx.id} idx={i}/>)
                 }
                 </tbody>
             </table>
@@ -40,6 +40,7 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
     const [originalTx] = useState(transaction);
     const [amount, setAmount] = useState(formatAsDollarAmount(transaction.amount));
     const [isEditing, setIsEditing] = useState(false);
+
     const {switchTransactionBox, getAllCategories, saveTransaction} = UseBudget();
     const rowBgColor = transaction.checked ? 'bg-sidebarBackground2' : 'bg-background';
     const rowClass = `${rowBgColor} hover:cursor-pointer`;
@@ -97,6 +98,9 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
             <td>
                 <input className={rowClass}
                        onMouseDown={onMouseDown}
+                       onChange={e => setTx(draft => {
+                           draft.date = new Date(e.target.value);
+                       })}
                        value={tx.date.toISOString().split('T')[0]}
                        type='date'/>
             </td>

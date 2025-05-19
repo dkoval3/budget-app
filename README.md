@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# **BudgIT**
+BudgIT is a React-based web application for managing your personal finances through flexible budgeting. Many budgeting apps today come with a hefty premium. The goal of this project is to create an affordable, bare-barebones budgeting application that supports automatic transaction imports.
+## **Features**
 
-## Getting Started
+- **Budgeting**
+    - Create and maintain a flexible, monthly spending plan
+    - Set up monthly spending goals (targets) to help rein in monthly spending
+    - Track transactions across accounts, displayed as your "activity" for the month
 
-First, run the development server:
+- **Account Management**
+    - Display accounts and their associated transactions.
+    - Dynamically calculate and display account balances and totals.
+    - Future scope: link cash and debit accounts, and automatically import transactions as they appear on your cards/accounts
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Intuitive Design**
+    - Built with modern libraries: React, Tailwind CSS, and Bootstrap.
+    - Fully interactive and responsive for ease of use.
+
+## **Technologies Used**
+This project leverages the following technologies and libraries:
+- **React**: A JavaScript library for building user interfaces.
+- **Next.js**: React framework for server-side rendering (SSR) and routing. Because this is a heavily interactive app, SSR is currently limited. In a future release, I would like to increase the use of SSR in this project.
+- **Tailwind CSS**: For styling.
+- **Bootstrap**: Supplies icons for this project
+- **TypeScript**: Used to provide type safety to the codebase and to improve readability
+
+## **Installation**
+To run this project locally, follow these steps:
+1. **Clone the Repository**:
+``` bash
+   git clone https://github.com/dkoval3/budget-app.git
+   cd budget-app
+```
+1. **Install Dependencies**: Ensure you have Node.js installed. Then, run:
+``` bash
+   npm install
+```
+1. **Start the Development Server**: Launch the app in development mode:
+``` bash
+   npm run dev
+```
+1. **Access the App**: Open your browser and navigate to:
+``` 
+   http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+As the project continues, this guide will be updated to explain how to set up the backend as Docker containers.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## **Code Structure**
+Here's a brief overview of the primary components and their responsibilities:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| **File/Folder** | **Description**                                                           |
+| --- |---------------------------------------------------------------------------|
+| **`/components` ** | Contains reusable UI components.       |
+| **`/common` ** | Utility functions for formatting and parsing (e.g., `Formatter.ts`).      |
+| **`/app/components/Hooks` ** | Custom hook (`UseBudget`) for managing app state and logic.               |
+| **`/model` ** | Type definitions and example data structures (e.g., `Account`, `Transaction`). |
+### Key Components:
+- **`BudgetTable.tsx` **: Displays the user's current budget plan.
+- **`AccountTable.tsx` **: Displays the list of transactions for the selected account. Supports inline editing and reactive state updates.
+- **`UseBudget.tsx` **: Custom React hook managing the application state. Handles logic for:
+    - Managing budget categories and line items, along with their targets.
+    - Adding/editing transactions.
+    - Selecting accounts or switching views.
 
-## Learn More
+## **Sample Data**
+The app includes predefined sample data, which can be found in these files:
+- **`SampleCashAccount.ts` **: Contains initial accounts and transactions for testing.
+- **`SampleBudget.ts` ** : Contains a sample budget, with targets for many line items, for testing.
+- Available sample transactions include categories like Rent, Restaurants, Fun, and Groceries.
 
-To learn more about Next.js, take a look at the following resources:
+## **Future Enhancements**
+Planned features and enhancements:
+- Implement sorting and filtering for transactions.
+- Add user login, authentication and persistent storage.
+- Increase SSR.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## **Screenshots**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| **Feature** | **Screenshot** |
+| --- | --- |
+| **Home Screen** |  |
+| **Add Transaction** |  |
+| **Transaction Table View** |  |
+## **Contact**
+If you have any questions or feedback, feel free to reach out!
+- **Developer**: Dane Koval
+- **Email**: [danekoval3@gmail.com](mailto:danekoval3@gmail.com)
+- **GitHub**: [https://github.com/dkoval3](https://github.com/dkoval3)

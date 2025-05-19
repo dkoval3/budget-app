@@ -11,7 +11,7 @@ export default function AccountNamePanel({ account, className }: AccountNamePane
             </div>
 
             <div className='flex'>
-                <div className='mr-2 text-sm'>{account.type}</div>
+                <div className='mr-4 text-sm'>{account.type}</div>
                 <div className='text-sm'>{account.linked ? 'Linked' : 'Not Linked'}</div>
             </div>
         </div>

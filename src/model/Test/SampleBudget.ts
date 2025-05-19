@@ -23,7 +23,8 @@ export const sampleBudget: BudgetObject = {
             },
             {
                 lineItem: 'Apartment',
-                assigned: 400, activity: 150,
+                assigned: 400,
+                activity: 150,
                 isSelected: false,
                 target: {
                     amount: 300,
