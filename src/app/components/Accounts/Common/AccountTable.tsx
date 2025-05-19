@@ -8,7 +8,7 @@ import {useImmer} from "use-immer";
 export default function AccountTable({className}: AccountTableProps) {
     const {currentAccount} = UseBudget();
     return (
-        <div className={`${className} border-collapse`}>
+        <div className={`${className}`}>
             <table className='w-full'>
                 <thead>
                 {renderTableHead()}
@@ -24,7 +24,7 @@ export default function AccountTable({className}: AccountTableProps) {
 }
 
 const renderTableHead = () => (
-    <tr>
+    <tr className='border-b-[0.5px] border-gray-700'>
         <th className='text-left text-lg'></th>
         <th className='text-left text-lg'>Date</th>
         <th className='text-left text-lg'>Payee</th>
@@ -80,7 +80,7 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
                 switchTransactionBox(idx);
             }
         }}
-            className={rowClass}
+            className={`${rowClass} border-b-[0.5px] border-gray-700`}
             key={idx}>
             <td>
                 <input

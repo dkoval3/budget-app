@@ -41,6 +41,15 @@ function useBudget() {
     const inputRef = useRef<HTMLInputElement>(null);
     const [undoList, updateUndoList] = useImmer<BudgetHistory>([]);
 
+    const calculateAccountBalance = (account: Account) => account.transactions.reduce((accumulator, current) => accumulator + current.amount, 0);
+
+    const calculateAccountTypeTotal = (type: 'Cash' | 'Credit') => {
+        return accounts.filter(account => account.type === type)
+            .reduce((accumulator, current) => {
+                return accumulator + calculateAccountBalance(current);
+            }, 0);
+    };
+
     const displayBudgetPage = () => setPageToDisplay(BUDGET);
 
     const displayAccountsPage = () => setPageToDisplay(ACCOUNTS);
@@ -268,6 +277,8 @@ function useBudget() {
         addTransaction,
         saveTransaction,
         switchTransactionBox,
+        calculateAccountBalance,
+        calculateAccountTypeTotal,
     };
 }
 
@@ -318,4 +329,6 @@ interface UseBudgetReturnType {
     addTransaction: (idx: number) => void,
     saveTransaction: (idx: number, transaction: Transaction) => void,
     switchTransactionBox: (i: number) => void,
+    calculateAccountBalance: (account: Account) => number,
+    calculateAccountTypeTotal: (type: 'Cash' | 'Credit') => number,
 }

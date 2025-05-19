@@ -5,7 +5,9 @@ export default function AccountNamePanel({ account, className }: AccountNamePane
         <div className={`${className} border-b-[0.5px] border-gray-700 pb-2`}>
             <div className='flex justify-between'>
                 <div className='text-xl'>{account.name}</div>
-                <button>Edit Name</button>
+                <button className='mr-1'>
+                    <i className="bi bi-pencil"></i>
+                </button>
             </div>
 
             <div className='flex'>

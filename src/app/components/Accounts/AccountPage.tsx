@@ -4,14 +4,15 @@ import AccountNamePanel from "@/app/components/Accounts/Common/AccountNamePanel"
 import BalancePanel from "@/app/components/Accounts/Common/BalancePanel";
 import AccountTable from "@/app/components/Accounts/Common/AccountTable";
 import {sampleAccounts} from "@/model/Test/SampleCashAccount";
-import {getAccountBalance} from "@/common/AccountUtil";
 import {FunctionBar} from "@/app/components/Accounts/Common/FunctionBar";
+import UseBudget from "@/app/components/Hooks/UseBudget";
 
 export default function AccountPage({ className }: AccountPageProps) {
+    const {calculateAccountBalance} = UseBudget();
     return (
         <div className={`${className} p-3`}>
             <AccountNamePanel account={sampleAccounts[0]} />
-            <BalancePanel balance={getAccountBalance(sampleAccounts[0])} />
+            <BalancePanel balance={calculateAccountBalance(sampleAccounts[0])} />
             <FunctionBar />
             <AccountTable />
         </div>
