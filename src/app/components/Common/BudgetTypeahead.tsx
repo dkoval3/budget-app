@@ -1,16 +1,19 @@
-import {ChangeEvent, useRef, useState} from "react";
+import {ChangeEvent, MouseEventHandler, useRef, useState} from "react";
 
 export function BudgetTypeahead(
     {
         className,
+        bgColor = 'bg-sidebarBackground',
         options,
         width,
         onChange = () => {},
         onSelect = () => {},
+        onMouseDown = () => {},
+        defaultValue = '',
     }: BudgetTypeaheadProps) {
     const [filteredOptions, setFilteredOptions] = useState(options);
     const [showOptions, setShowOptions] = useState(false);
-    const [typeaheadValue, setTypeaheadValue] = useState('');
+    const [typeaheadValue, setTypeaheadValue] = useState(defaultValue);
     const ref = useRef<HTMLInputElement | null>(null);
 
     const filterOptions = (value: string) => options.filter(item => item.toLowerCase().includes(value.toLowerCase()));
@@ -24,15 +27,16 @@ export function BudgetTypeahead(
     return(
         <div className={`${className} relative`}>
             <input
-                className={`${width} p-1 bg-sidebarBackground`}
+                className={`${width} ${bgColor} p-1`}
                 type='text'
                 ref={ref}
                 value={typeaheadValue}
                 onFocus={() => setShowOptions(true)}
                 onBlur={() => setShowOptions(false)}
+                onMouseDown={onMouseDown}
                 onChange={internalOnChange}
             />
-            <ul className='flex flex-col items-start absolute max-h-44 w-full overflow-y-scroll bg-sidebarBackground'>
+            <ul className='flex flex-col z-50 items-start absolute max-h-44 w-full overflow-y-scroll bg-sidebarBackground'>
                 {
                     showOptions
                         ? filteredOptions.map((item, idx) => (
@@ -59,7 +63,10 @@ export function BudgetTypeahead(
 
 interface BudgetTypeaheadProps {
     className?: string,
+    bgColor?: string,
     width?: string
+    onMouseDown?: MouseEventHandler,
+    defaultValue?: string,
     onSelect?: (v: string, i: number) => void,
     onChange?: () => void,
     options: string[],

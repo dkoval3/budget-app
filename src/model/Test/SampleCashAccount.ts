@@ -3,6 +3,7 @@ import {Account} from "@/model/Account";
 
 export const sampleCashAccountTransactions: Transaction[] = [{
     id: '0',
+    checked: false,
     date: new Date(2025, 2, 1),
     payee: 'Marquis at Desert Ridge',
     category: 'Rent',
@@ -12,6 +13,7 @@ export const sampleCashAccountTransactions: Transaction[] = [{
     amount: 1612.48,
 }, {
     id: '1',
+    checked: false,
     date: new Date(2025, 2, 2),
     payee: 'Chipotle',
     category: 'Restaurants',
@@ -21,6 +23,7 @@ export const sampleCashAccountTransactions: Transaction[] = [{
     amount: 10.93,
 }, {
     id: '2',
+    checked: false,
     date: new Date(2025, 2, 3),
     payee: 'Top Golf',
     category: 'Fun',
@@ -30,6 +33,7 @@ export const sampleCashAccountTransactions: Transaction[] = [{
     amount: 54.34,
 }, {
     id: '3',
+    checked: false,
     date: new Date(2025, 2, 4),
     payee: 'Albertsons',
     category: 'Groceries',

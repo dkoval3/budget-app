@@ -1,8 +1,15 @@
 import {FILL_UP, HAVE_BALANCE, SET_ASIDE, TargetType} from "@/model/Target";
 
 export function formatAsDollarAmount(amount: string | number) {
-    if (typeof amount !== 'number' || isNaN(amount)) throw new Error("The input must be a valid number.");
+    if (typeof amount === 'string') {
+        amount = parseFloat(amount);
+    }
+    if (typeof amount !== 'number' || isNaN(amount)) throw new Error(`Formatter error: typeof amount is ${typeof amount}`);
     return `${amount < 0 ? '-': ''}$${Math.abs(Number(amount)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
+}
+
+export function parseAsDollarAmount(amount: string): number {
+    return parseFloat(parseFloat(amount.replace(/[^0-9.]/g, '')).toFixed(2));
 }
 
 export function formatAsDate(date: Date, separator: string = '/') {

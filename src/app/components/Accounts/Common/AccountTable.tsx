@@ -1,19 +1,21 @@
 import {Transaction} from "@/model/Transaction";
-import {formatAsDate, formatAsDollarAmount} from "@/common/Formatter";
+import {formatAsDollarAmount, parseAsDollarAmount} from "@/common/Formatter";
 import UseBudget from "@/app/components/Hooks/UseBudget";
-import {useState} from "react";
+import {MouseEvent, useRef, useState} from "react";
+import {BudgetTypeahead} from "@/app/components/Common/BudgetTypeahead";
+import {useImmer} from "use-immer";
 
 export default function AccountTable({className}: AccountTableProps) {
-    const { currentAccount } = UseBudget();
+    const {currentAccount} = UseBudget();
     return (
         <div className={`${className} border-collapse`}>
             <table className='w-full'>
                 <thead>
-                    {renderTableHead()}
+                {renderTableHead()}
                 </thead>
                 <tbody>
                 {
-                    currentAccount.transactions.map((tx, i) => <TransactionRow transaction={tx} key={i} idx={i} />)
+                    currentAccount.transactions.map((tx, i) => <TransactionRow transaction={tx} key={i} idx={i}/>)
                 }
                 </tbody>
             </table>
@@ -23,7 +25,7 @@ export default function AccountTable({className}: AccountTableProps) {
 
 const renderTableHead = () => (
     <tr>
-        <th className='text-left text-lg'><input type='checkbox'/></th>
+        <th className='text-left text-lg'></th>
         <th className='text-left text-lg'>Date</th>
         <th className='text-left text-lg'>Payee</th>
         <th className='text-left text-lg'>Category</th>
@@ -32,49 +34,114 @@ const renderTableHead = () => (
     </tr>
 );
 
-const TransactionRow = ({ transaction, idx }: TransactionRowProps) => {
-    const [disabled, setDisabled] = useState([true, true, true, true, true, true]);
+const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [tx, setTx] = useImmer(transaction);
+    const [originalTx] = useState(transaction);
+    const [amount, setAmount] = useState(formatAsDollarAmount(transaction.amount));
+    const [isEditing, setIsEditing] = useState(false);
+    const {switchTransactionBox, getAllCategories, saveTransaction} = UseBudget();
+    const rowBgColor = transaction.checked ? 'bg-sidebarBackground2' : 'bg-background';
+    const rowClass = `${rowBgColor} hover:cursor-pointer`;
+
+    const resetTransaction = () => {
+        setTx(originalTx);
+        setAmount(`${originalTx.amount}`);
+    };
+
+    const onMouseDown = (e: MouseEvent<HTMLInputElement, globalThis.MouseEvent>) => {
+        if (!inputRef.current!.checked) {
+            e.preventDefault();
+        }
+    };
+
+    const save = () => {
+        try {
+            const dollarAmount = parseAsDollarAmount(amount);
+            if (isNaN(dollarAmount)) throw new Error();
+            const newTx = {...tx, amount: dollarAmount};
+            saveTransaction(idx, newTx);
+            setIsEditing(false);
+            inputRef.current!.checked = false;
+            setAmount(formatAsDollarAmount(newTx.amount));
+            console.log(newTx);
+        } catch {
+            alert("Please enter a proper dollar amount");
+            return;
+        }
+    }
+
     return (
-        <tr key={idx}>
+        <tr onClick={(e) => {
+            const targetType = (e.target as HTMLInputElement).type;
+            if (!inputRef.current!.checked && (targetType === 'text' || targetType === 'date')) {
+                inputRef.current!.checked = true;
+                setIsEditing(true);
+                switchTransactionBox(idx);
+            }
+        }}
+            className={rowClass}
+            key={idx}>
             <td>
-                <input type='checkbox'/>
+                <input
+                    type='checkbox' className='hover:cursor-pointer'
+                    ref={inputRef}
+                    onClick={(e) => {
+                        switchTransactionBox(idx);
+                        setIsEditing(v => !v);
+                        resetTransaction();
+                        e.stopPropagation();
+                    }}
+                />
             </td>
-            <td className='hover:cursor-pointer'>
-                <input className='bg-background hover:cursor-pointer'
-                       onClick={() => setDisabled(toggleDisabled(disabled, 1))}
-                       value={transaction.date.toISOString().split('T')[0]}
+            <td>
+                <input className={rowClass}
+                       onMouseDown={onMouseDown}
+                       value={tx.date.toISOString().split('T')[0]}
                        type='date'/>
             </td>
-            <td className='hover:cursor-pointer'>
-                <input className='bg-background hover:cursor-pointer'
-                       onClick={() => setDisabled(toggleDisabled(disabled, 2))}
-                       defaultValue={transaction.payee}/>
+            <td>
+                <input className={rowClass}
+                       onMouseDown={onMouseDown}
+                       onChange={(e) => setTx(draft => {
+                           draft.payee = e.target.value;
+                       })}
+                       value={tx.payee}/>
             </td>
-            <td className='hover:cursor-pointer'
-                defaultValue={transaction.category}>
-                <input className='bg-background hover:cursor-pointer'
-                       onClick={() => setDisabled(toggleDisabled(disabled, 3))}
-                       defaultValue={transaction.category}/>
+            <td>
+                <BudgetTypeahead
+                    bgColor={rowBgColor}
+                    className={rowClass}
+                    onSelect={(v) => setTx(draft => {
+                        draft.category = v;
+                    })}
+                    onMouseDown={onMouseDown}
+                    defaultValue={tx.category}
+                    options={getAllCategories()} />
             </td>
-            <td className='hover:cursor-pointer'
-                defaultValue={formatAsDate(transaction.date)}>
-                <input className='bg-background hover:cursor-pointer'
-                       onClick={() => setDisabled(toggleDisabled(disabled, 4))}
-                       defaultValue={transaction.notes}/>
+            <td>
+                <input className={rowClass}
+                       onChange={(e) => setTx(draft => {
+                           draft.notes = e.target.value;
+                       })}
+                       onMouseDown={onMouseDown}
+                       value={tx.notes}/>
             </td>
-            <td className='hover:cursor-pointer'
-                defaultValue={formatAsDate(transaction.date)}>
-                <input className='bg-background hover:cursor-pointer'
-                       onClick={() => setDisabled(toggleDisabled(disabled, 5))}
-                       defaultValue={formatAsDollarAmount(transaction.amount)}/>
+            <td>
+                <input className={rowClass}
+                       onMouseDown={onMouseDown}
+                       onChange={(e) => setAmount(e.target.value)}
+                       value={amount}/>
             </td>
+            {
+              isEditing ?
+                  <td className='text-xs' onClick={save}>
+                      Save
+                  </td>
+                  : null
+            }
         </tr>
     );
-};
-
-const toggleDisabled = (disabled: boolean[], i: number) => {
-    disabled[i] = !disabled[i];
-    return disabled;
 };
 
 interface AccountTableProps {

@@ -19,6 +19,8 @@ import {
 import {applyUndo} from "@/common/UndoRedoUtil";
 import {sampleAccounts} from "@/model/Test/SampleCashAccount";
 import {Account} from "@/model/Account";
+import {Transaction} from "@/model/Transaction";
+import {ACCOUNTS, BUDGET} from "@/Constants";
 
 export const BudgetContext = React.createContext({} as UseBudgetReturnType);
 
@@ -35,13 +37,19 @@ function useBudget() {
     const [accounts, updateAccounts] = useImmer<Account[]>(sampleAccounts);
     const [currentAccountIdx, setCurrentAccountIdx] = useState(0);
     const [headerIsSelected, setHeaderIsSelected] = useState(false);
+    const [pageToDisplay, setPageToDisplay] = useState(BUDGET);
     const inputRef = useRef<HTMLInputElement>(null);
     const [undoList, updateUndoList] = useImmer<BudgetHistory>([]);
 
+    const displayBudgetPage = () => setPageToDisplay(BUDGET);
+
+    const displayAccountsPage = () => setPageToDisplay(ACCOUNTS);
+
     const addTransaction = (idx: number) => {
         updateAccounts(draft => {
-            draft[idx].transactions.push({
+            draft[idx].transactions.unshift({
                 id: crypto.randomUUID(),
+                checked: false,
                 date: new Date(),
                 payee: '',
                 category: '',
@@ -51,6 +59,18 @@ function useBudget() {
                 amount: 0,
             });
         })
+    }
+
+    const saveTransaction = (idx: number, transaction: Transaction) => {
+        updateAccounts(draft => {
+            draft[currentAccountIdx].transactions[idx] = transaction;
+        });
+    };
+
+    const switchTransactionBox = (i: number) => {
+        updateAccounts(draft => {
+            draft[currentAccountIdx].transactions[i].checked = !draft[currentAccountIdx].transactions[i].checked;
+        });
     }
 
     const switchBoxes = (i: number, j: number, isCategoryHeader: boolean) => isCategoryHeader ? switchCategoryBoxes(i) : switchBox(i, j);
@@ -189,6 +209,10 @@ function useBudget() {
         return budgetObject.some(budgetCategory => budgetCategory.isSelected);
     };
 
+    const getAllCategories = () => {
+        return budgetObject.flatMap(category => category.lineItems.map(item => item.lineItem));
+    };
+
     const addToUndoList = (modification: BudgetAction) => {
         updateUndoList(draft => {
             draft.push(modification);
@@ -212,6 +236,9 @@ function useBudget() {
 
     return {
         budgetObject,
+        pageToDisplay,
+        displayBudgetPage,
+        displayAccountsPage,
         numberOfCategoryGroups: budgetObject.length,
         amountToAssign: sampleBudget.metadata.totalAvailable - calculateTotalAssigned(budgetObject),
         undo,
@@ -225,6 +252,7 @@ function useBudget() {
         updateLineItemName,
         addLineItem,
         addCategoryGroup,
+        getAllCategories,
         deleteLineItem,
         addTarget,
         target,
@@ -236,7 +264,10 @@ function useBudget() {
         accounts,
         currentAccount: accounts[currentAccountIdx],
         currentAccountIdx,
+        setCurrentAccountIdx,
         addTransaction,
+        saveTransaction,
+        switchTransactionBox,
     };
 }
 
@@ -255,13 +286,18 @@ export default function UseBudget() {
 
 interface UseBudgetReturnType {
     budgetObject: Budget,
+    pageToDisplay: string,
+    displayBudgetPage: () => void,
+    displayAccountsPage: () => void,
     accounts: Account[],
     currentAccount: Account,
     currentAccountIdx: number,
+    setCurrentAccountIdx: (i: number) => void,
     numberOfCategoryGroups: number
     headerIsSelected: boolean,
     amountToAssign: number,
     getLineItem: (i: number, j: number) => BudgetLineItem,
+    getAllCategories: () => string[],
     switchBox: (i: number, j: number, v?: boolean) => void,
     switchAllBoxes: (v?: boolean) => void,
     unselectAllExcept: (i: number, j: number) => void,
@@ -280,4 +316,6 @@ interface UseBudgetReturnType {
     isOnlyOneBoxChecked: boolean,
     isAnythingSelected: boolean,
     addTransaction: (idx: number) => void,
+    saveTransaction: (idx: number, transaction: Transaction) => void,
+    switchTransactionBox: (i: number) => void,
 }

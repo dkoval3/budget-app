@@ -13,7 +13,7 @@ export default function AccountPage({ className }: AccountPageProps) {
             <AccountNamePanel account={sampleAccounts[0]} />
             <BalancePanel balance={getAccountBalance(sampleAccounts[0])} />
             <FunctionBar />
-            <AccountTable account={sampleAccounts[0]} />
+            <AccountTable />
         </div>
     );
 }
