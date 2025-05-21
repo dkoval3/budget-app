@@ -2,7 +2,7 @@
 
 import Button from "@/app/components/Button/Button";
 import {useState} from "react";
-import AddCategoryPopup from "@/app/components/Popups/AddCategoryPopup";
+import AddItemPopup from "@/app/components/Popups/AddItemPopup";
 import UseBudget from "@/app/components/Hooks/UseBudget";
 
 export default function BudgetOperationsBar() {
@@ -18,7 +18,7 @@ export default function BudgetOperationsBar() {
                     onClick={() => setPopupIsClosed(false)}
                 />
                 { !popupIsClosed
-                    ? <AddCategoryPopup
+                    ? <AddItemPopup
                         className='translate-y-9 translate-x-2'
                         setClose={setPopupIsClosed}
                     />

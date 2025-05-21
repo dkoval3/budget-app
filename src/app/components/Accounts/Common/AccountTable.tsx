@@ -4,6 +4,7 @@ import UseBudget from "@/app/components/Hooks/UseBudget";
 import {MouseEvent, useRef, useState} from "react";
 import {BudgetTypeahead} from "@/app/components/Common/BudgetTypeahead";
 import {useImmer} from "use-immer";
+import Button1 from "@/app/components/Button/Button1";
 
 export default function AccountTable({className}: AccountTableProps) {
     const {currentAccount} = UseBudget();
@@ -35,7 +36,7 @@ const renderTableHead = () => (
 );
 
 const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
-    const inputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<HTMLInputElement>({} as HTMLInputElement);
     const [tx, setTx] = useImmer(transaction);
     const [originalTx] = useState(transaction);
     const [amount, setAmount] = useState(formatAsDollarAmount(transaction.amount));
@@ -51,10 +52,14 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
     };
 
     const onMouseDown = (e: MouseEvent<HTMLInputElement, globalThis.MouseEvent>) => {
-        if (!inputRef.current!.checked) {
+        if (!inputRef.current.checked) {
             e.preventDefault();
         }
     };
+
+    const onChangeSelect = (v: string) => setTx(draft => {
+        draft.category = v;
+    });
 
     const save = () => {
         try {
@@ -63,7 +68,7 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
             const newTx = {...tx, amount: dollarAmount};
             saveTransaction(idx, newTx);
             setIsEditing(false);
-            inputRef.current!.checked = false;
+            inputRef.current.checked = false;
             setAmount(formatAsDollarAmount(newTx.amount));
             console.log(newTx);
         } catch {
@@ -75,8 +80,8 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
     return (
         <tr onClick={(e) => {
             const targetType = (e.target as HTMLInputElement).type;
-            if (!inputRef.current!.checked && (targetType === 'text' || targetType === 'date')) {
-                inputRef.current!.checked = true;
+            if (!inputRef.current.checked && (targetType === 'text' || targetType === 'date')) {
+                inputRef.current.checked = true;
                 setIsEditing(true);
                 switchTransactionBox(idx);
             }
@@ -116,11 +121,10 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
                 <BudgetTypeahead
                     bgColor={rowBgColor}
                     className={rowClass}
-                    onSelect={(v) => setTx(draft => {
-                        draft.category = v;
-                    })}
+                    onSelect={onChangeSelect}
+                    onChange={onChangeSelect}
                     onMouseDown={onMouseDown}
-                    defaultValue={tx.category}
+                    value={tx.category}
                     options={getAllCategories()} />
             </td>
             <td>
@@ -140,7 +144,7 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
             {
               isEditing ?
                   <td className='text-xs' onClick={save}>
-                      Save
+                      <Button1 className='px-1' text='Save' />
                   </td>
                   : null
             }

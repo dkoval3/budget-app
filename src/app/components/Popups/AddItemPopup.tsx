@@ -13,8 +13,8 @@ const runValidation = (category: string) => {
     }
 }
 
-export default function AddCategoryPopup({ className, setClose, categoryGroupIdx = -1 }: AddCategoryPopupProps) {
-    const [category, setCategory] = useState('');
+export default function AddItemPopup({ className, setClose, categoryGroupIdx = -1 }: AddCategoryPopupProps) {
+    const [item, setItem] = useState('');
     const { addLineItem, addCategoryGroup } = UseBudget();
 
     return (
@@ -25,7 +25,7 @@ export default function AddCategoryPopup({ className, setClose, categoryGroupIdx
                     autoFocus={true}
                     type='text'
                     placeholder='New Category'
-                    onChange={(e) => setCategory(e.target.value)}
+                    onChange={(e) => setItem(e.target.value)}
                 />
             </div>
             <div className='flex justify-end mt-2'>
@@ -42,14 +42,14 @@ export default function AddCategoryPopup({ className, setClose, categoryGroupIdx
                     color='bg-buttonActive'
                     hoverColor='bg-buttonActiveHover'
                     onClick={() => {
-                        const validationResults = runValidation(category);
+                        const validationResults = runValidation(item);
                         if (Object.keys(validationResults).length > 0) {
                             alert(validationResults.message);
                         } else if (categoryGroupIdx !== -1) {
-                            addLineItem(categoryGroupIdx, category);
+                            addLineItem(categoryGroupIdx, item);
                             setClose(true);
                         } else {
-                            addCategoryGroup(category);
+                            addCategoryGroup(item);
                             setClose(true);
                         }
                     }}

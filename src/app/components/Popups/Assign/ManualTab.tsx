@@ -6,6 +6,7 @@ import {BudgetTypeahead} from "@/app/components/Common/BudgetTypeahead";
 export default function ManualTab({ className, setShow }: ManualTabProps) {
     const { amountToAssign, budgetObject, updateAssignedValue } = UseBudget();
     const [assign, setAssign] = useState(amountToAssign.toString());
+    const [category, setCategory] = useState('');
     const [idx, setIdx] = useState<{ i: number, j: number } | undefined>(undefined);
 
     const indexes: { i: number, j: number }[] = [];
@@ -27,7 +28,9 @@ export default function ManualTab({ className, setShow }: ManualTabProps) {
     }
 
     const onSelect = (_item: string, idx: number)=> {
+        const { i, j } = indexes[idx];
         setIdx(indexes[idx]);
+        setCategory(budgetObject[i].lineItems[j].lineItem)
     };
 
     const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,8 +51,12 @@ export default function ManualTab({ className, setShow }: ManualTabProps) {
             <div className='my-4'>
                 <label>To:</label>
                 <BudgetTypeahead
-                    onChange={() => setIdx(undefined)}
+                    onChange={(v) => {
+                        setIdx(undefined);
+                        setCategory(v);
+                    }}
                     onSelect={onSelect}
+                    value={category}
                     options={options}
                     width='w-64'
                 />

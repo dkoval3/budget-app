@@ -18,13 +18,13 @@ export function formatAsDate(date: Date, separator: string = '/') {
 
 export function numToDay(num: number | string) {
     if (typeof num === 'string') num = parseInt(num);
-    switch (num) {
+    switch (num % 10) {
         case 1:
-            return '1st';
+            return `${num}st`;
         case 2:
-            return '2nd'
+            return `${num}nd`;
         case 3:
-            return '3rd'
+            return `${num}rd`;
         default:
             return `${num}th`;
     }

@@ -1,7 +1,7 @@
 import {formatAsDollarAmount} from "@/common/Formatter";
 import {BudgetCellProps} from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetTableProps";
 import {useState} from "react";
-import AddCategoryPopup from "@/app/components/Popups/AddCategoryPopup";
+import AddItemPopup from "@/app/components/Popups/AddItemPopup";
 
 export default function BudgetCell(
     {
@@ -39,7 +39,7 @@ export default function BudgetCell(
             }
             {
                 !popupIsClosed
-                    ? <AddCategoryPopup
+                    ? <AddItemPopup
                         className='translate-y-1'
                         setClose={setPopupIsClosed}
                         categoryGroupIdx={index.i} />
