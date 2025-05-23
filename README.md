@@ -65,7 +65,7 @@ Here's a brief overview of the primary components and their responsibilities:
 
 ## **Sample Data**
 The app includes predefined sample data, which can be found in these files:
-- **`SampleCashAccount.ts` **: Contains initial accounts and transactions for testing.
+- **`SampleAccounts.ts` **: Contains initial accounts and transactions for testing.
 - **`SampleBudget.ts` ** : Contains a sample budget, with targets for many line items, for testing.
 - Available sample transactions include categories like Rent, Restaurants, Fun, and Groceries.
 

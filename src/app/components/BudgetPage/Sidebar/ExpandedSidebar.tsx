@@ -32,23 +32,34 @@ export default function ExpandedSidebar({ setIsMinimized, className }: ExpandedS
 const ExpandableAccount = ({expand, setExpand, title, accountType}: ExpandableAccountProps) => {
     const {accounts, setCurrentAccountIdx, displayAccountsPage, calculateAccountTypeTotal, calculateAccountBalance} = UseBudget();
     const accountTypeTotal = calculateAccountTypeTotal(accountType);
-    const accountsToList = accounts.filter(account => account.type === accountType);
+    const accountsToList = accounts
+        .map((a, idx) => ({ account: a, idx }))
+        .filter(item => item.account.type === accountType)
     return (
         <div className='hover:cursor-pointer'>
             <AccountTypeDropdown expanded={expand} onClick={() => setExpand(!expand)} accountType={title} amount={accountTypeTotal}/>
             {
                 expand
-                    ? accountsToList.map((account, i) =>
-                        (
-                            <div className='flex justify-between hover:cursor-pointer text-sm pl-9 pr-2' key={i} onClick={() => {
-                                setCurrentAccountIdx(i);
-                                displayAccountsPage();
-                            }}>
-                                {account.name}
-                                <div className='text-xs'>
-                                    {formatAsDollarAmount(calculateAccountBalance(account))}
+                    ? accountsToList.map((item) => {
+                        const accountBalance = calculateAccountBalance(item.account);
+                        const shouldBeRed = (item.account.type === CASH && accountBalance < 0)
+                            || (item.account.type === CREDIT && accountBalance > 0);
+                        const color = shouldBeRed ? 'text-red2Hover' : '';
+                        const formattedDollarAmount = `${shouldBeRed ? '-' : ''}${formatAsDollarAmount(accountBalance)}`;
+
+                        return (
+                            <div className='flex justify-between hover:cursor-pointer text-sm pl-9 pr-2' key={item.idx}
+                                 onClick={() => {
+                                     setCurrentAccountIdx(item.idx);
+                                     displayAccountsPage();
+                                 }}>
+                                {item.account.name}
+                                <div
+                                    className={`text-xs ${color} pb-2`}>
+                                    {formattedDollarAmount}
                                 </div>
-                            </div>))
+                            </div>)
+                    })
                     : null
             }
         </div>

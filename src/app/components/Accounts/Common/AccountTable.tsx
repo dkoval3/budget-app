@@ -4,7 +4,7 @@ import UseBudget from "@/app/components/Hooks/UseBudget";
 import {MouseEvent, useRef, useState} from "react";
 import {BudgetTypeahead} from "@/app/components/Common/BudgetTypeahead";
 import {useImmer} from "use-immer";
-import Button1 from "@/app/components/Button/Button1";
+import BudgetButton from "@/app/components/Button/BudgetButton";
 
 export default function AccountTable({className}: AccountTableProps) {
     const {currentAccount} = UseBudget();
@@ -48,7 +48,7 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
 
     const resetTransaction = () => {
         setTx(originalTx);
-        setAmount(`${originalTx.amount}`);
+        setAmount(`${formatAsDollarAmount(originalTx.amount)}`);
     };
 
     const onMouseDown = (e: MouseEvent<HTMLInputElement, globalThis.MouseEvent>) => {
@@ -70,7 +70,6 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
             setIsEditing(false);
             inputRef.current.checked = false;
             setAmount(formatAsDollarAmount(newTx.amount));
-            console.log(newTx);
         } catch {
             alert("Please enter a proper dollar amount");
             return;
@@ -78,77 +77,105 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
     }
 
     return (
-        <tr onClick={(e) => {
-            const targetType = (e.target as HTMLInputElement).type;
-            if (!inputRef.current.checked && (targetType === 'text' || targetType === 'date')) {
-                inputRef.current.checked = true;
-                setIsEditing(true);
-                switchTransactionBox(idx);
-            }
-        }}
-            className={`${rowClass} border-b-[0.5px] border-gray-700`}
-            key={idx}>
-            <td>
-                <input
-                    type='checkbox' className='hover:cursor-pointer'
-                    ref={inputRef}
-                    onClick={(e) => {
-                        switchTransactionBox(idx);
-                        setIsEditing(v => !v);
-                        resetTransaction();
-                        e.stopPropagation();
-                    }}
-                />
-            </td>
-            <td>
-                <input className={rowClass}
-                       onMouseDown={onMouseDown}
-                       onChange={e => setTx(draft => {
-                           draft.date = new Date(e.target.value);
-                       })}
-                       value={tx.date.toISOString().split('T')[0]}
-                       type='date'/>
-            </td>
-            <td>
-                <input className={rowClass}
-                       onMouseDown={onMouseDown}
-                       onChange={(e) => setTx(draft => {
-                           draft.payee = e.target.value;
-                       })}
-                       value={tx.payee}/>
-            </td>
-            <td>
-                <BudgetTypeahead
-                    bgColor={rowBgColor}
-                    className={rowClass}
-                    onSelect={onChangeSelect}
-                    onChange={onChangeSelect}
-                    onMouseDown={onMouseDown}
-                    value={tx.category}
-                    options={getAllCategories()} />
-            </td>
-            <td>
-                <input className={rowClass}
-                       onChange={(e) => setTx(draft => {
-                           draft.notes = e.target.value;
-                       })}
-                       onMouseDown={onMouseDown}
-                       value={tx.notes}/>
-            </td>
-            <td>
-                <input className={rowClass}
-                       onMouseDown={onMouseDown}
-                       onChange={(e) => setAmount(e.target.value)}
-                       value={amount}/>
-            </td>
+        <>
+            <tr onClick={(e) => {
+                const targetType = (e.target as HTMLInputElement).type;
+                if (!inputRef.current.checked && (targetType === 'text' || targetType === 'date')) {
+                    inputRef.current.checked = true;
+                    setIsEditing(true);
+                    switchTransactionBox(idx);
+                }
+            }}
+                className={`${rowClass} border-b-[0.5px] border-gray-700`}
+                key={idx}>
+                <td>
+                    <input
+                        type='checkbox' className='hover:cursor-pointer'
+                        ref={inputRef}
+                        onClick={(e) => {
+                            switchTransactionBox(idx);
+                            setIsEditing(v => !v);
+                            resetTransaction();
+                            e.stopPropagation();
+                        }}
+                    />
+                </td>
+                <td>
+                    <input className={rowClass}
+                           onMouseDown={onMouseDown}
+                           onChange={e => setTx(draft => {
+                               draft.date = new Date(e.target.value);
+                           })}
+                           value={tx.date.toISOString().split('T')[0]}
+                           type='date'/>
+                </td>
+                <td>
+                    <input className={rowClass}
+                           onMouseDown={onMouseDown}
+                           onChange={(e) => setTx(draft => {
+                               draft.payee = e.target.value;
+                           })}
+                           value={tx.payee}/>
+                </td>
+                <td>
+                    <BudgetTypeahead
+                        bgColor={rowBgColor}
+                        className={rowClass}
+                        onSelect={onChangeSelect}
+                        onChange={onChangeSelect}
+                        onMouseDown={onMouseDown}
+                        value={tx.category}
+                        options={getAllCategories()} />
+                </td>
+                <td>
+                    <input className={rowClass}
+                           onChange={(e) => setTx(draft => {
+                               draft.notes = e.target.value;
+                           })}
+                           onMouseDown={onMouseDown}
+                           value={tx.notes}/>
+                </td>
+                <td>
+                    <input className={rowClass}
+                           onMouseDown={onMouseDown}
+                           onChange={(e) => setAmount(e.target.value)}
+                           value={amount}/>
+                </td>
+            </tr>
             {
-              isEditing ?
-                  <td className='text-xs' onClick={save}>
-                      <Button1 className='px-1' text='Save' />
-                  </td>
-                  : null
+                isEditing ?
+                    <tr className={`${rowBgColor} border-b-[0.5px] border-gray-700`}>
+                        <td colSpan={2} className='p-1'>
+                            <BudgetButton className='bg-red-700 hover:bg-red-600 mr-2'
+                                          onClick={(e) => {
+                                              console.log('implement delete logic');
+                                          }}>
+                                Delete
+                            </BudgetButton>
+                        </td>
+                        <td colSpan={4} className="p-1">
+                            <div className="flex justify-end">
+                                <BudgetButton className='mr-2'
+                                    onClick={(e) => {
+                                        switchTransactionBox(idx);
+                                        inputRef.current.checked = false;
+                                        setIsEditing(v => !v);
+                                        resetTransaction();
+                                        e.stopPropagation();
+                                    }}>
+                                    Cancel
+                                </BudgetButton>
+                                <BudgetButton
+                                    className='bg-green-700 hover:bg-green-600'
+                                    onClick={save}>
+                                    Save
+                                </BudgetButton>
+                            </div>
+                        </td>
+                    </tr>
+                    : null
             }
-        </tr>
+        </>
     );
 };
 

@@ -17,7 +17,7 @@ import {
     BudgetHistory,
 } from "@/model/history/BudgetHistoryTypes";
 import {applyUndo} from "@/common/UndoRedoUtil";
-import {sampleAccounts} from "@/model/Test/SampleCashAccount";
+import {sampleAccounts} from "@/model/Test/SampleAccounts";
 import {Account} from "@/model/Account";
 import {Transaction} from "@/model/Transaction";
 import {ACCOUNTS, BUDGET} from "@/Constants";
