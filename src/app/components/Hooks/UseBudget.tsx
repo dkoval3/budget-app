@@ -19,7 +19,7 @@ import {
 import {applyUndo} from "@/common/UndoRedoUtil";
 import {sampleAccounts} from "@/model/Test/SampleAccounts";
 import {Account} from "@/model/Account";
-import {Transaction} from "@/model/Transaction";
+import {newTransaction, Transaction} from "@/model/Transaction";
 import {ACCOUNTS, BUDGET} from "@/Constants";
 
 export const BudgetContext = React.createContext({} as UseBudgetReturnType);
@@ -35,11 +35,24 @@ const calculateTotalAssigned = (budgetObject: Budget) => {
 function useBudget() {
     const [budgetObject, updateBudgetObject] = useImmer<BudgetCategory[]>(sampleBudget.budget);
     const [accounts, updateAccounts] = useImmer<Account[]>(sampleAccounts);
+    const [showCreateAccountForm, setShowCreateAccountForm] = useState(false);
     const [currentAccountIdx, setCurrentAccountIdx] = useState(0);
     const [headerIsSelected, setHeaderIsSelected] = useState(false);
     const [pageToDisplay, setPageToDisplay] = useState(BUDGET);
     const inputRef = useRef<HTMLInputElement>(null);
     const [undoList, updateUndoList] = useImmer<BudgetHistory>([]);
+
+    const addAccount = (name: string, type: string, initialBalance: number) => {
+        updateAccounts(draft => {
+            draft.push({
+                id: crypto.randomUUID().toString(),
+                name,
+                type,
+                linked: false,
+                transactions: [newTransaction(initialBalance)],
+            });
+        });
+    };
 
     const calculateAccountBalance = (account: Account) => account.transactions.reduce((accumulator, current) => accumulator + current.amount, 0);
 
@@ -56,17 +69,7 @@ function useBudget() {
 
     const addTransaction = (idx: number) => {
         updateAccounts(draft => {
-            draft[idx].transactions.unshift({
-                id: crypto.randomUUID(),
-                checked: false,
-                date: new Date(),
-                payee: '',
-                category: '',
-                categoryId: '',
-                categoryIdx: 0,
-                notes: '',
-                amount: 0,
-            });
+            draft[idx].transactions.unshift(newTransaction());
         })
     }
 
@@ -75,6 +78,12 @@ function useBudget() {
             draft[currentAccountIdx].transactions[idx] = transaction;
         });
     };
+
+    const deleteTransaction = (idx: number)=> {
+        updateAccounts(draft => {
+            draft[currentAccountIdx].transactions.splice(idx, 1);
+        });
+    }
 
     const switchTransactionBox = (i: number) => {
         updateAccounts(draft => {
@@ -276,9 +285,13 @@ function useBudget() {
         setCurrentAccountIdx,
         addTransaction,
         saveTransaction,
+        deleteTransaction,
         switchTransactionBox,
         calculateAccountBalance,
         calculateAccountTypeTotal,
+        showCreateAccountForm,
+        setShowCreateAccountForm,
+        addAccount,
     };
 }
 
@@ -328,7 +341,11 @@ interface UseBudgetReturnType {
     isAnythingSelected: boolean,
     addTransaction: (idx: number) => void,
     saveTransaction: (idx: number, transaction: Transaction) => void,
+    deleteTransaction: (idx: number) => void,
     switchTransactionBox: (i: number) => void,
     calculateAccountBalance: (account: Account) => number,
     calculateAccountTypeTotal: (type: 'Cash' | 'Credit') => number,
+    showCreateAccountForm: boolean,
+    setShowCreateAccountForm: (v: boolean) => void,
+    addAccount: (name: string, type: string, initialBalance: number) => void,
 }

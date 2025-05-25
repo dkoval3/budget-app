@@ -3,7 +3,7 @@ import React, {ReactNode} from "react";
 export default function BudgetButton({ className, children, onClick }: BudgetButtonProps) {
     return (
         <button
-            className={`bg-gray-600 hover:bg-gray-500 transition-colors w-24 rounded-[5px] ${className}`}
+            className={`bg-gray-600 hover:bg-gray-500 transition-colors rounded-[5px] ${className}`}
             onClick={onClick}
         >
             {children}

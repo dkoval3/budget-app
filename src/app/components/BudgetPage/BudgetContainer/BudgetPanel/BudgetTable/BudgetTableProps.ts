@@ -1,5 +1,4 @@
 import {BudgetLineItem} from "@/model/BudgetTypes";
-import {RefObject} from "react";
 
 export interface BudgetTableProps {
     className?: string,
@@ -23,7 +22,8 @@ export interface BudgetCellProps {
     className?: string,
     index: { i: number, j: number},
     includeAddIcon?: boolean,
-    // ref: RefObject<HTMLInputElement>,
+    shouldHighlight?: boolean,
+    targetMet?: boolean,
     message: string | number,
     includeCheckbox?: boolean,
     isSelected?: boolean,

@@ -6,12 +6,9 @@ export function BudgetTypeahead(
         bgColor = 'bg-sidebarBackground',
         options,
         width,
-        onChange = () => {
-        },
-        onSelect = () => {
-        },
-        onMouseDown = () => {
-        },
+        onChange = () => {},
+        onSelect = () => {},
+        onMouseDown = () => {},
         value = '',
     }: BudgetTypeaheadProps) {
     const [filteredOptions, setFilteredOptions] = useState(options);

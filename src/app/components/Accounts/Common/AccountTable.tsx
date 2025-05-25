@@ -42,7 +42,7 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
     const [amount, setAmount] = useState(formatAsDollarAmount(transaction.amount));
     const [isEditing, setIsEditing] = useState(false);
 
-    const {switchTransactionBox, getAllCategories, saveTransaction} = UseBudget();
+    const {switchTransactionBox, getAllCategories, saveTransaction, deleteTransaction} = UseBudget();
     const rowBgColor = transaction.checked ? 'bg-sidebarBackground2' : 'bg-background';
     const rowClass = `${rowBgColor} hover:cursor-pointer`;
 
@@ -146,16 +146,14 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
                 isEditing ?
                     <tr className={`${rowBgColor} border-b-[0.5px] border-gray-700`}>
                         <td colSpan={2} className='p-1'>
-                            <BudgetButton className='bg-red-700 hover:bg-red-600 mr-2'
-                                          onClick={(e) => {
-                                              console.log('implement delete logic');
-                                          }}>
+                            <BudgetButton className='bg-red-700 hover:bg-red-600 mr-2 w-24'
+                                          onClick={() => deleteTransaction(idx)}>
                                 Delete
                             </BudgetButton>
                         </td>
                         <td colSpan={4} className="p-1">
                             <div className="flex justify-end">
-                                <BudgetButton className='mr-2'
+                                <BudgetButton className='mr-2 w-24'
                                     onClick={(e) => {
                                         switchTransactionBox(idx);
                                         inputRef.current.checked = false;
@@ -166,7 +164,7 @@ const TransactionRow = ({transaction, idx}: TransactionRowProps) => {
                                     Cancel
                                 </BudgetButton>
                                 <BudgetButton
-                                    className='bg-green-700 hover:bg-green-600'
+                                    className='bg-green-700 hover:bg-green-600 w-24'
                                     onClick={save}>
                                     Save
                                 </BudgetButton>

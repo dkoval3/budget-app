@@ -9,3 +9,15 @@ export type Transaction = {
     notes: string,
     amount: number,
 };
+
+export const newTransaction = (amount: number = 0) => ({
+    id: crypto.randomUUID(),
+    checked: false,
+    date: new Date(),
+    payee: '',
+    category: '',
+    categoryId: '',
+    categoryIdx: 0,
+    notes: '',
+    amount,
+});

@@ -11,12 +11,15 @@ export default function BudgetCell(
         includeCheckbox = false,
         isSelected = false,
         onClick = () => {},
+        targetMet = false,
+        shouldHighlight = false,
         includeAddIcon = false,
     }: BudgetCellProps) {
     const [isHovering, setIsHovering] = useState(false);
     const [popupIsClosed, setPopupIsClosed] = useState(true);
     const onMouseEnter = includeAddIcon ? () => setIsHovering(true) : () => {};
     const onMouseLeave = includeAddIcon ? () => setIsHovering(false) : () => {};
+    const highlightStyle = shouldHighlight ? (targetMet ? 'text-black bg-green-600' : 'text-black bg-yellow-600') : '';
 
     return (
         <td {...{ onMouseEnter, onMouseLeave }} className={`${className}`}>
@@ -29,7 +32,7 @@ export default function BudgetCell(
                     className='mx-2' />
                 : null
             }
-            {typeof message === 'number' ? formatAsDollarAmount(message) : message}
+            {typeof message === 'number' ? <div className={shouldHighlight && message < 0 ? 'text-black bg-red-600' : highlightStyle}>{formatAsDollarAmount(message)}</div> : message}
             { includeAddIcon && isHovering
                 ? popupIsClosed
                     ? <button onClick={() => setPopupIsClosed(false)}>

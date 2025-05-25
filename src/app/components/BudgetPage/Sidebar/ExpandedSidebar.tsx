@@ -7,11 +7,12 @@ import {useState} from "react";
 import UseBudget from "@/app/components/Hooks/UseBudget";
 import {CASH, CREDIT} from "@/Constants";
 import {formatAsDollarAmount} from "@/common/Formatter";
+import BudgetButton from "@/app/components/Button/BudgetButton";
 
 export default function ExpandedSidebar({ setIsMinimized, className }: ExpandedSidebarProps) {
     const [expandCashAccounts, setExpandCashAccounts] = useState(false);
     const [expandCreditAccounts, setExpandCreditAccounts] = useState(false);
-    const {displayBudgetPage} = UseBudget();
+    const {displayBudgetPage, setShowCreateAccountForm} = UseBudget();
     return(
         <div className={`${className} relative flex-col h-full w-80`}>
             <div>
@@ -19,8 +20,12 @@ export default function ExpandedSidebar({ setIsMinimized, className }: ExpandedS
                 <ModeButton iconClass={budgetIcon} message='Budget' onClick={displayBudgetPage}/>
                 <ExpandableAccount title='CASH' accountType={CASH} expand={expandCashAccounts} setExpand={setExpandCashAccounts} />
                 <ExpandableAccount title={'CREDIT'} accountType={CREDIT} expand={expandCreditAccounts} setExpand={setExpandCreditAccounts} />
-                {/*<AccountTypeDropdown expanded={false} accountType='CREDIT' amount={-1419.46}/>*/}
-                <Button1 className='mt-4 w-1/2' text='Add Account' iconClass='bi bi-plus-circle-fill'/>
+                <BudgetButton className='mt-4 py-2 px-4' onClick={() => setShowCreateAccountForm(true)}>
+                    <div className='flex justify-start items-center'>
+                        <i className='bi bi-plus-circle-fill pr-4'></i>
+                        Add Account
+                    </div>
+                </BudgetButton>
             </div>
             <button className='absolute bottom-0 right-0 mr-4 mb-4 text-neutral-300 hover:text-white text-2xl' onClick={() => setIsMinimized(true)}>
                 <i className="bi bi-caret-left-square"></i>
