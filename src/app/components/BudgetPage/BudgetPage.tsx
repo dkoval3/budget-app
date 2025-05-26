@@ -1,5 +1,3 @@
-'use client'
-
 import Sidebar from "@/app/components/BudgetPage/Sidebar/Sidebar";
 import RightPanel from "@/app/components/BudgetPage/BudgetContainer/RightPanel";
 import CreateAccountForm from "@/app/components/Accounts/Common/CreateAccountForm";
