@@ -6,7 +6,7 @@ import BudgetCellWithInput
 export default function BudgetRow({ item, index, onClick, className }: BudgetRowProps) {
     const target = item.target ?? { amount: Number.MAX_VALUE };
     const targetMet = item.assigned >= target.amount;
-    return <tr className={`${className} text-right border-[0.5px] border-gray-700`}>
+    return <tr className={`${className} text-right border-y-[0.5px] border-gray-700`}>
         <BudgetCell includeCheckbox={true} index={index} onClick={onClick} isSelected={item.isSelected}
                     className='text-left' message={item.lineItem}/>
         <BudgetCellWithInput message={item.assigned} index={index} isSelected={item.isSelected}/>

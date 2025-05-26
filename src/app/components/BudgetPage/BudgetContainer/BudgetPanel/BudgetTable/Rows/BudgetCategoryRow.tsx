@@ -3,7 +3,7 @@ import BudgetCell from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/
 
 export default function BudgetCategoryRow({ item, index, onClick, className }: BudgetCategoryRowProps) {
     return <tr
-        className={`${className} text-right border-[0.5px] border-gray-700 font-bold text-lg bg-sidebarBackground`} >
+        className={`${className} text-right border-y-[0.5px] border-gray-700 font-bold text-lg bg-sidebarBackground`} >
         <BudgetCell includeCheckbox={true} includeAddIcon={true} index={{i: index, j: -1}} onClick={onClick} isSelected={item.isSelected}
                     className='text-left' message={item.lineItem}/>
         <BudgetCell message={item.assigned} index={{i: index, j: -1}} isSelected={item.isSelected}/>

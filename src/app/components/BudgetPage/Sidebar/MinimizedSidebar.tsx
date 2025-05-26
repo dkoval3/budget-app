@@ -6,7 +6,7 @@ export default function MinimizedSidebar({ className, setIsMinimized }: Minimize
 
     // Uncomment once implemented in future release
     return(
-        <div className={`${className} relative flex flex-col h-full items-center pb-3`}>
+        <div className={`${className} relative flex flex-col h-full items-center pb-3 border-r-[0.5px] border-gray-700`}>
             <IconButton buttonIcon={userAccountIcon} />
             <IconButton buttonIcon={budgetIcon} />
             {/*<IconButton buttonIcon={reflectIcon} />*/}

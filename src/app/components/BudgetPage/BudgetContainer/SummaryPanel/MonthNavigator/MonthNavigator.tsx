@@ -11,20 +11,22 @@ export default function MonthNavigator({ className }: MonthNavigatorProps) {
               <i
                   className={`${onHoverStyle} bi bi-arrow-left-circle mx-3 text-3xl`}
                   onClick={() => {
-                      setCurrentMonth(Math.trunc((currentMonth - 1) % 12));
-                      setCurrentYear(currentYear - Math.trunc((currentMonth - 1) / 12));
+                      const newMonth = Math.trunc(((currentMonth - 1) % 12) + 12);
+                      setCurrentMonth(newMonth % 12);
+                      setCurrentYear(currentYear + (newMonth === 11 ? -1 : 0));
                   }} />
           </button>
           <button className='flex items-center'>
               <div className='text-2xl font-bold'>{`${months[currentMonth]} ${currentYear}`}</div>
-              <i className={`${onHoverStyle} bi bi-caret-down-fill text-xl ml-2`}
-                 onClick={() => {
-                     setCurrentMonth(Math.trunc((currentMonth + 1) % 12));
-                     setCurrentYear(currentYear - Math.trunc((currentMonth + 1) / 12));
-                 }} />
+              {/*<i className={`${onHoverStyle} bi bi-caret-down-fill text-xl ml-2`} />*/}
           </button>
           <button>
-              <i className={`${onHoverStyle} bi bi-arrow-right-circle mx-3 text-3xl`}></i>
+              <i
+                  className={`${onHoverStyle} bi bi-arrow-right-circle mx-3 text-3xl`}
+                  onClick={() => {
+                      setCurrentMonth(Math.trunc((currentMonth + 1) % 12));
+                      setCurrentYear(currentYear + Math.trunc((currentMonth + 1) / 12));
+                  }} />
           </button>
       </div>
   );

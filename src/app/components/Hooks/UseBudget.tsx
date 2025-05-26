@@ -56,6 +56,12 @@ function useBudget() {
         });
     };
 
+    const updateAccountName = (i: number, newName: string) => {
+        updateAccounts(draft => {
+            draft[i].name = newName;
+        });
+    }
+
     const calculateAccountBalance = (account: Account) => account.transactions.reduce((accumulator, current) => accumulator + current.amount, 0);
 
     const calculateAccountTypeTotal = (type: 'Cash' | 'Credit') => {
@@ -299,6 +305,7 @@ function useBudget() {
         currentAccount: accounts[currentAccountIdx],
         currentAccountIdx,
         setCurrentAccountIdx,
+        updateAccountName,
         addTransaction,
         saveTransaction,
         deleteTransaction,
@@ -337,6 +344,7 @@ interface UseBudgetReturnType {
     currentAccount: Account,
     currentAccountIdx: number,
     setCurrentAccountIdx: (i: number) => void,
+    updateAccountName: (i: number, newName: string) => void,
     numberOfCategoryGroups: number
     headerIsSelected: boolean,
     amountToAssign: number,

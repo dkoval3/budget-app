@@ -8,10 +8,10 @@ import {FunctionBar} from "@/app/components/Accounts/Common/FunctionBar";
 import UseBudget from "@/app/components/Hooks/UseBudget";
 
 export default function AccountPage({ className }: AccountPageProps) {
-    const {calculateAccountBalance, currentAccountIdx} = UseBudget();
+    const {calculateAccountBalance, currentAccountIdx, accounts} = UseBudget();
     return (
         <div className={`${className} p-3`}>
-            <AccountNamePanel account={sampleAccounts[currentAccountIdx]} />
+            <AccountNamePanel account={accounts[currentAccountIdx]} />
             <BalancePanel balance={calculateAccountBalance(sampleAccounts[currentAccountIdx])} />
             <FunctionBar />
             <AccountTable />

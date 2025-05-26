@@ -14,7 +14,7 @@ export default function ExpandedSidebar({ setIsMinimized, className }: ExpandedS
     const [expandCreditAccounts, setExpandCreditAccounts] = useState(false);
     const {displayBudgetPage, setShowCreateAccountForm} = UseBudget();
     return(
-        <div className={`${className} relative flex-col h-full w-80`}>
+        <div className={`${className} relative flex-col h-full w-80 border-r-[0.5px] border-gray-700`}>
             <div>
                 <ProfileTab/>
                 <ModeButton iconClass={budgetIcon} message='Budget' onClick={displayBudgetPage}/>

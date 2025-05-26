@@ -1,8 +1,8 @@
 import {ChangeEvent} from "react";
 
-export default function EditItemPopup({ className, itemName, onOk, onDelete, onCancel, onChange }: EditItemPopupProps) {
+export default function EditItemPopup({ className, itemName, onOk, onDelete = () => {}, onCancel, onChange, showDelete = true }: EditItemPopupProps) {
     return(
-        <div className={`flex flex-col bg-sidebarBackground absolute p-4 m-2 w-[22rem] translate-x-[-7.7rem] translate-y-[-0.5rem] rounded-xl ${className}`}>
+        <div className={`flex flex-col bg-sidebarBackground absolute rounded-xl p-4 m-2 w-[22rem] ${className}`}>
             <input type='text'
                    className='bg-buttonHover mb-4 p-1 rounded'
                    autoFocus={true}
@@ -10,10 +10,15 @@ export default function EditItemPopup({ className, itemName, onOk, onDelete, onC
                    onChange={onChange}
             />
             <div className='flex justify-between'>
-                <div className='flex'>
-                    <EditItemButton className='bg-buttonHover mr-2' message='Hide'/>
-                    <EditItemButton onClick={onDelete} className='bg-red-900' message='Delete'/>
-                </div>
+            <div className='flex'>
+                <EditItemButton className='bg-buttonHover mr-2' message='Hide'/>
+                {
+                    showDelete
+                        ? <EditItemButton onClick={onDelete} className='bg-red-900' message='Delete'/>
+                        : null
+                }
+            </div>
+
                 <div className='flex'>
                     <EditItemButton onClick={onCancel} className='bg-buttonHover mr-2' message='Cancel'/>
                     <EditItemButton onClick={onOk} className='bg-button' message='OK'/>
@@ -35,9 +40,10 @@ interface EditItemPopupProps {
     className?: string,
     itemName: string,
     onOk: () => void,
-    onDelete: () => void,
+    onDelete?: () => void,
     onCancel: () => void,
     onChange: (e: ChangeEvent<HTMLInputElement>) => void,
+    showDelete?: boolean,
 }
 
 interface EditItemButton {

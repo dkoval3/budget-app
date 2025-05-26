@@ -59,6 +59,7 @@ const CategoryHeader = ({}) => {
             </div>
             { isEditing
                 ? <EditItemPopup
+                    className='translate-x-[-7.7rem] translate-y-[-0.5rem]'
                     itemName={newCategoryName}
                     onCancel={() => setIsEditing(false)}
                     onChange={onChange}
