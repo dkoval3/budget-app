@@ -41,6 +41,8 @@ function useBudget() {
     const [pageToDisplay, setPageToDisplay] = useState(BUDGET);
     const inputRef = useRef<HTMLInputElement>(null);
     const [undoList, updateUndoList] = useImmer<BudgetHistory>([]);
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
     const addAccount = (name: string, type: string, initialBalance: number) => {
         updateAccounts(draft => {
@@ -162,6 +164,12 @@ function useBudget() {
         });
     }
 
+    const updateCategoryName = (i: number, newName: string) => {
+        updateBudgetObject(draft => {
+            draft[i].categoryName = newName;
+        });
+    };
+
     const addTarget = (i: number, j: number, target: Target) => {
         addToUndoList({ action: 'item_update', toAdd: budgetObject[i].lineItems[j], index: { i, j } });
         updateBudgetObject(draft => {
@@ -206,6 +214,12 @@ function useBudget() {
             toAdd: budgetObject[i].lineItems[j]
         });
     }
+
+    const deleteCategory = (i: number) => {
+        updateBudgetObject(draft => {
+            draft.splice(i, 1);
+        });
+    };
 
     function subBudgetFromSelected(): SubBudgetLineItem[] {
         const subBudget: SubBudgetLineItem[] = budgetObject.flatMap((budgetCategory, i) => {
@@ -268,10 +282,12 @@ function useBudget() {
         switchBoxes,
         updateAssignedValue,
         updateLineItemName,
+        updateCategoryName,
         addLineItem,
         addCategoryGroup,
         getAllCategories,
         deleteLineItem,
+        deleteCategory,
         addTarget,
         target,
         subBudget,
@@ -292,6 +308,10 @@ function useBudget() {
         showCreateAccountForm,
         setShowCreateAccountForm,
         addAccount,
+        currentMonth,
+        currentYear,
+        setCurrentMonth,
+        setCurrentYear,
     };
 }
 
@@ -329,10 +349,12 @@ interface UseBudgetReturnType {
     switchBoxes: (i: number, j: number, isCategoryHeader: boolean) => void,
     updateAssignedValue: (i: number, j: number, assigned: number) => void,
     updateLineItemName: (i: number, j: number, name: string) => void,
+    updateCategoryName: (i: number, newName: string) => void,
     addLineItem: (i: number, name: string) => void,
     undo: () => void,
     addCategoryGroup: (name: string) => void,
     deleteLineItem: (i: number, j: number) => void,
+    deleteCategory: (i: number) => void,
     addTarget: (i: number, j: number, target: Target) => void,
     inputRef: RefObject<HTMLInputElement | null>,
     subBudget: SubBudgetLineItem[],
@@ -348,4 +370,8 @@ interface UseBudgetReturnType {
     showCreateAccountForm: boolean,
     setShowCreateAccountForm: (v: boolean) => void,
     addAccount: (name: string, type: string, initialBalance: number) => void,
+    currentMonth: number,
+    currentYear: number,
+    setCurrentMonth: (m: number) => void,
+    setCurrentYear: (y: number) => void,
 }

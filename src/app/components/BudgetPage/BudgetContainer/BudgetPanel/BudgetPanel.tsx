@@ -1,7 +1,6 @@
 import BudgetOperationsBar
     from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetOperationsBar/BudgetOperationsBar";
 import BudgetTable from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/BudgetTable/BudgetTable";
-import {BudgetProvider} from "@/app/components/Hooks/UseBudget";
 import SelectedCellsSummary from "@/app/components/BudgetPage/BudgetContainer/BudgetPanel/SelectedCellsSummary/SelectedCellsSummary";
 
 export default function BudgetPanel() {

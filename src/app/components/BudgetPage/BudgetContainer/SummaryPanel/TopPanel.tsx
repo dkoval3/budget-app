@@ -4,14 +4,12 @@ import AgeOfMoney from "@/app/components/BudgetPage/BudgetContainer/SummaryPanel
 import BudgetFilters from "@/app/components/BudgetPage/BudgetContainer/SummaryPanel/BudgetFilters/BudgetFilters";
 
 export default function TopPanel() {
-    const month = 'Feb';
-    const year = '2025';
     const ageOfMoney = 191;
 
     return (
         <div className='flex justify-between flex-col mt-2 w-full h-28 border-b-[0.5px] border-gray-500'>
             <div className='flex justify-between mb-3'>
-                <MonthNavigator month={month} year={year}/>
+                <MonthNavigator />
                 <AmountToAssign />
                 <AgeOfMoney days={ageOfMoney}/>
             </div>

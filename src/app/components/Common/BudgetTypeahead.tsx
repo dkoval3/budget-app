@@ -23,7 +23,7 @@ export function BudgetTypeahead(
     }
 
     return (
-        <div className={`${className} relative`}>
+        <div className={`relative ${className}`}>
             <input
                 className={`${width} ${bgColor} p-1`}
                 type='text'

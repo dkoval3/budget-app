@@ -23,7 +23,7 @@ export default function CreateAccountForm ({ className }: CreateAccountFormProps
 
     return (
         <div className={`w-full h-full backdrop-blur-sm z-50 ${className}`}>
-            <div className={`flex flex-col justify-between p-2 items-center bg-gray-600 w-1/4 h-1/3 rounded-[5px] ${className}`}>
+            <div className={`flex flex-col justify-between p-2 items-center bg-sidebarBackground w-1/4 h-1/3 rounded-[5px] ${className}`}>
                 <div className='flex'>
                     <h1 className='px-5 font-bold'>Add New Account</h1>
                     <i
@@ -32,13 +32,14 @@ export default function CreateAccountForm ({ className }: CreateAccountFormProps
                 </div>
                 <div>
                 <input
-                    className='text-black'
+                    className='bg-sidebarBackground border-[0.5px] rounded p-1'
                     onChange={(e) => setAccountName(e.target.value)}
                     type='text'
                     placeholder='Account Name' />
                 </div>
                 <div>
                     <BudgetTypeahead
+                        className='bg-sidebarBackground border-[0.5px]'
                         options={[CASH, CREDIT]}
                         onChange={(v) => setAccountType(v)}
                         onSelect={(v) => setAccountType(v)}
@@ -46,7 +47,7 @@ export default function CreateAccountForm ({ className }: CreateAccountFormProps
                 </div>
                 <div>
                     <input
-                        className='text-black'
+                        className='bg-sidebarBackground border-[0.5px] rounded p-1'
                         onChange={(e) => setInitialBalance(parseFloat(e.target.value))}
                         type='number'
                         placeholder='Initial Balance' />
