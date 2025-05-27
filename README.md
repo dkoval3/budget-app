@@ -18,11 +18,12 @@ BudgIT is a React-based web application for managing your personal finances thro
 
 ## **Technologies Used**
 This project leverages the following technologies and libraries:
+- **TypeScript**: Used to provide type safety to the codebase and to improve readability
 - **React**: A JavaScript library for building user interfaces.
 - **Next.js**: React framework for server-side rendering (SSR) and routing. Because this is a heavily interactive app, SSR is currently limited. In a future release, I would like to increase the use of SSR in this project.
 - **Tailwind CSS**: For styling.
 - **Bootstrap**: Supplies icons for this project
-- **TypeScript**: Used to provide type safety to the codebase and to improve readability
+- **Amazon Cognito**: Identity service used for account creation/login, which supports OAUTH2 and OpenID Connect 
 
 ## **Installation**
 To run this project locally, follow these steps:

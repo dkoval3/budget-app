@@ -1,4 +1,4 @@
-import {User} from "oidc-client-ts";
+import {User, WebStorageStateStore} from "oidc-client-ts";
 
 export const config = {
     redirectUri: {
@@ -12,7 +12,7 @@ export const config = {
         production: '',
     },
     logoutUri: {
-        development: 'http://localhost:3000/login',
+        development: 'http://localhost:3000/logout',
         test: '',
         production: '',
     },
@@ -35,7 +35,8 @@ export const config = {
                     document.title,
                     "/",
                 );
-            }
+            },
+            userStore: new WebStorageStateStore({ store: localStorage })
         },
         test: {
             authority: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_LBTWY6FKt",
@@ -50,7 +51,8 @@ export const config = {
                     document.title,
                     "/",
                 );
-            }
+            },
+            userStore: new WebStorageStateStore({ store: localStorage })
         },
         production: {
             authority: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_LBTWY6FKt",
@@ -65,7 +67,8 @@ export const config = {
                     document.title,
                     "/",
                 );
-            }
+            },
+            userStore: new WebStorageStateStore({ store: localStorage })
         }
     },
 };

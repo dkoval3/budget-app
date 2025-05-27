@@ -2,15 +2,10 @@ import {useAuth} from "react-oidc-context";
 import {ReactNode} from "react";
 import {BudgetProvider} from "@/app/components/Hooks/UseBudget";
 import BudgetPage from "@/app/components/BudgetPage/BudgetPage";
-import {useBudgetConfig} from "@/app/components/Hooks/UseBudgetConfig";
+import BudgetButton from "@/app/components/Button/BudgetButton";
 
 export default function Login({}: LoginWrapperProps) {
     const auth = useAuth();
-    const {COGNITO_DOMAIN, COGNITO_CLIENT_ID, COGNITO_LOGOUT_URI} = useBudgetConfig();
-
-    const signOutRedirect = () => {
-        window.location.href = `${COGNITO_DOMAIN}/logout?client_id=${COGNITO_CLIENT_ID}&logout_uri=${encodeURIComponent(COGNITO_LOGOUT_URI)}`;
-    };
 
     if (auth.isLoading) {
         return <div>Loading...</div>;
@@ -29,9 +24,13 @@ export default function Login({}: LoginWrapperProps) {
     }
 
     return (
-        <div>
-            <button onClick={() => auth.signinRedirect()}>Sign in</button>
-            <button onClick={() => signOutRedirect()}>Sign out</button>
+        <div className='flex flex-col w-full h-full items-center justify-center'>
+            <h1>Budget App - v1.0.0</h1>
+            <BudgetButton
+                className='mt-4 px-2 py-1'
+                onClick={() => auth.signinRedirect()}>
+                Sign In
+            </BudgetButton>
         </div>
     );
 }
