@@ -3,6 +3,7 @@ import {ReactNode} from "react";
 import {BudgetProvider} from "@/app/components/Hooks/UseBudget";
 import BudgetPage from "@/app/components/BudgetPage/BudgetPage";
 import BudgetButton from "@/app/components/Button/BudgetButton";
+import {redirect, RedirectType} from "next/navigation";
 
 export default function Login({}: LoginWrapperProps) {
     const auth = useAuth();
@@ -16,11 +17,7 @@ export default function Login({}: LoginWrapperProps) {
     }
 
     if (auth.isAuthenticated) {
-        return (
-            <BudgetProvider>
-                <BudgetPage/>
-            </BudgetProvider>
-        );
+        redirect("/", RedirectType.replace);
     }
 
     return (
