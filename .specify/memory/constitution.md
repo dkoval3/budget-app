@@ -1,21 +1,13 @@
 <!--
 Sync Impact Report
-- Version change: (unversioned template) → 1.0.0
-- Scope: UI (Next.js web app) only. Backend/API rules belong in a separate backend constitution.
-- Source: docs/constitution-open-questions.md (answers dated 2026-09-27), filtered to UI-relevant rules.
-- Modified principles: all template placeholders replaced (initial ratification)
-- Added principles:
-  I. Financial Correctness (NON-NEGOTIABLE)
-  II. Dates and Time
-  III. State Management
-  IV. API Contract and Server Data
-  V. Rendering and Routing
-  VI. Security and Privacy
-  VII. Test-First Domain Logic
-  VIII. Design System and Code Organization
-  IX. Accessibility and UX
-  X. Performance
-- Added sections: Scope and Technology Constraints; Development Workflow and Quality Gates
+- Version change: 1.0.0 → 1.1.0 (MINOR: materially expanded guidance in an existing principle)
+- Modified principles:
+  VII. Test-First Domain Logic: added the rule that local development and tests run against a
+  stateful MSW mock API typed from the OpenAPI contract, plus an E2E suite against the real backend
+  once it exists; rationale expanded
+- Other edits: added MSW to the stack list in Scope and Technology Constraints
+- Added principles: none
+- Added sections: none
 - Removed sections: none
 - Templates: plan-template.md "Constitution Check" reads this file at runtime; no template edits made.
 - Deferred TODOs: none
@@ -164,9 +156,14 @@ the system.
 - End-to-end tests MUST cover at least: sign-in, assigning money, adding a transaction, creating a
   target, and undo. New critical flows are added to this list as they ship.
 - Test fixtures live in `tests/fixtures`, not in `src/`.
+- Local development and automated tests MUST run against a stateful mock API (MSW) whose handlers
+  are typed from the generated OpenAPI types and seeded from `tests/fixtures`. A smaller end-to-end
+  suite MUST also run against the real backend once it exists.
 
 **Rationale**: Money and undo bugs are silent and costly; pure, tested domain functions catch them
-before users do.
+before users do. Because the API owns all data and totals, a mock API built on the same contract
+lets UI work and tests proceed without the backend. Running some tests against the real backend
+catches places where the mock has drifted from it.
 
 ### VIII. Design System and Code Organization
 
@@ -242,7 +239,8 @@ retrofit.
 ## Scope and Technology Constraints
 
 - **Stack**: TypeScript (strict), React, Next.js App Router, Tailwind CSS, Bootstrap Icons, TanStack
-  Query, TanStack Virtual, Immer, date-fns, and Amazon Cognito (OIDC) for identity.
+  Query, TanStack Virtual, Immer, date-fns, MSW (mock API for development and tests), and Amazon
+  Cognito (OIDC) for identity.
 - **v1 includes**: manual transaction entry and CSV import, budgeting, targets and account views.
 - **Out of scope for v1**: shared or multi-user budgets, investments, multiple currencies, a native
   mobile app, offline use, and server push of changes (Server-Sent Events or WebSockets; revisit if
@@ -277,4 +275,4 @@ retrofit.
 - Every plan's Constitution Check and every pre-merge self-review MUST verify compliance with these
   principles. Any deviation MUST be justified in the plan's Complexity Tracking table.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-01 | **Last Amended**: 2026-10-01
+**Version**: 1.1.0 | **Ratified**: 2026-10-01 | **Last Amended**: 2026-10-05

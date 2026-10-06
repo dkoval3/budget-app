@@ -17,7 +17,8 @@ npx tsc --noEmit  # type check (not wired to a script)
 ```
 
 There's no test framework, test script or tests yet. The constitution specifies Vitest, React
-Testing Library and Playwright, but none is installed.
+Testing Library and Playwright, with local development and tests running against a stateful MSW
+mock API typed from the OpenAPI contract. None of this is installed yet.
 
 ## Spec Kit and the constitution
 
